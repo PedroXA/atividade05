@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudo Dirigido — Eletricidade & Eletromagnetismo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #a78bfa;
+    --text: #e8eaf0;
+    --text-muted: #7a8099;
+    --green: #22d3a0;
+    --yellow: #fbbf24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+
+  /* NAV PILLS */
+  .nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 36px 0 0;
+  }
+
+  .nav-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  .nav-pill:hover, .nav-pill.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.06);
+  }
+
+  /* SECTIONS */
+  .section {
+    margin: 60px 0;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    padding: 4px 8px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    white-space: nowrap;
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  .section-number.mag { color: var(--accent2); border-color: var(--accent2); }
+  .section-number.em  { color: var(--accent3); border-color: var(--accent3); }
+  .section-number.ind { color: var(--green);   border-color: var(--green); }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  /* TOPIC CARDS */
+  .topic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .topic:hover { border-color: rgba(0,229,255,0.25); }
+
+  .topic::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+  }
+
+  .topic.mag::before  { background: var(--accent2); }
+  .topic.em::before   { background: var(--accent3); }
+  .topic.ind::before  { background: var(--green); }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .topic.mag h3 { color: var(--accent2); }
+  .topic.em h3  { color: var(--accent3); }
+  .topic.ind h3 { color: var(--green); }
+
+  .topic p {
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .topic p:last-child { margin-bottom: 0; }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .info-box.mag { color: var(--accent2); }
+  .info-box.em  { color: var(--accent3); }
+  .info-box.ind { color: var(--green); }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* SYMBOL */
+  .symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 2px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--accent);
+    margin: 2px;
+  }
+
+  /* LIST */
+  ul.styled {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  ul.styled li {
+    padding-left: 20px;
+    position: relative;
+    color: var(--text);
+  }
+
+  ul.styled li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .mag ul.styled li::before { color: var(--accent2); }
+  .em  ul.styled li::before { color: var(--accent3); }
+  .ind ul.styled li::before { color: var(--green); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 48px 0;
+    opacity: 0.3;
+  }
+
+  /* QUESTÕES */
+  #questoes {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px;
+    margin: 60px 0;
+  }
+
+  .questoes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .questoes-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    color: var(--accent);
+  }
+
+  .questao {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .questao:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .questao-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .questao-tag {
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  .tag-cap  { color: var(--accent);  border-color: var(--accent);  background: rgba(0,229,255,0.08); }
+  .tag-mag  { color: var(--accent2); border-color: var(--accent2); background: rgba(255,107,53,0.08); }
+  .tag-em   { color: var(--accent3); border-color: var(--accent3); background: rgba(167,139,250,0.08); }
+  .tag-ind  { color: var(--green);   border-color: var(--green);   background: rgba(34,211,160,0.08); }
+
+  .questao-text {
+    font-size: 15.5px;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .alternativas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .alt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 14px;
+    color: var(--text);
+    background: transparent;
+    text-align: left;
+    width: 100%;
+    font-family: 'Lora', serif;
+  }
+
+  .alt:hover {
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .alt.correct {
+    border-color: var(--green);
+    background: rgba(34,211,160,0.08);
+    color: var(--green);
+  }
+
+  .alt.wrong {
+    border-color: #ef4444;
+    background: rgba(239,68,68,0.08);
+    color: #ef4444;
+  }
+
+  .alt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    opacity: 0.6;
+    padding-top: 1px;
+  }
+
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 3px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: rgba(34,211,160,0.1); border: 1px solid var(--green); color: var(--green); }
+  .feedback.wrong-fb   { background: rgba(239,68,68,0.1);  border: 1px solid #ef4444;     color: #ef4444; }
+
+  /* SCORE */
+  .score-bar {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+
+  .score-bar.show { display: block; }
+
+  .score-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .score-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .score-display span { color: var(--accent); }
+
+  .progress-track {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    #questoes { padding: 24px 20px; }
+    .topic { padding: 20px; }
+    .section-header { flex-direction: column; gap: 10px; }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <p class="header-label">Estudo Dirigido</p>
+    <h1>Eletricidade &<br><span>Eletromagnetismo</span></h1>
+    <p class="subtitle">// Capacitores · Magnetismo · Eletromagnetismo · Indutores</p>
+    <nav class="nav-pills">
+      <a class="nav-pill" href="#capacitores">01 Capacitores</a>
+      <a class="nav-pill" href="#magnetismo">02 Magnetismo</a>
+      <a class="nav-pill" href="#eletromagnetismo">03 Eletromagnetismo</a>
+      <a class="nav-pill" href="#indutores">04 Indutores</a>
+      <a class="nav-pill" href="#questoes">05 Questões</a>
+    </nav>
+  </header>
+
+  <!-- ======================== CAPACITORES ======================== -->
+  <section class="section reveal" id="capacitores">
+    <div class="section-header">
+      <span class="section-number">01 / CAP</span>
+      <h2>Capacitores</h2>
+    </div>
+
+    <div class="topic reveal">
+      <h3>Conceito de Capacitância</h3>
+      <p>Um <strong>capacitor</strong> é um componente eletrônico passivo capaz de armazenar energia na forma de campo elétrico entre duas superfícies condutoras separadas por um material isolante chamado <em>dielétrico</em>.</p>
+      <p>A <strong>capacitância (C)</strong> é a grandeza que mede a capacidade de um capacitor de armazenar cargas elétricas para uma dada diferença de potencial, definida pela relação:</p>
+      <div class="info-box">C = Q / V &nbsp;&nbsp;→&nbsp;&nbsp; Capacitância = Carga / Tensão</div>
+      <p>Quanto maior a área das placas e menor a distância entre elas, maior será a capacitância. O tipo de dielétrico utilizado também influencia diretamente na capacitância através da <em>permissividade elétrica</em> do material.</p>
+    </div>
+
+    <div class="topic reveal">
+      <h3>Unidade de Medida</h3>
+      <p>A unidade de capacitância no SI é o <strong>Farad (F)</strong>, em homenagem ao físico Michael Faraday. Na prática, essa unidade é muito grande, sendo comum o uso de submúltiplos:</p>
+      <table>
+        <tr><th>Símbolo</th><th>Nome</th><th>Equivalência</th></tr>
+        <tr><td><span class="symbol">mF</span></td><td>Milifarad</td><td>10⁻³ F</td></tr>
+        <tr><td><span class="symbol">μF</span></td><td>Microfarad</td><td>10⁻⁶ F</td></tr>
+        <tr><td><span class="symbol">nF</span></td><td>Nanofarad</td><td>10⁻⁹ F</td></tr>
+        <tr><td><span class="symbol">pF</span></td><td>Picofarad</td><td>10⁻¹² F</td></tr>
+      </table>
+    </div>
+
+    <div class="topic reveal">
+      <h3>Associação de Capacitores</h3>
+      <p><strong>Associação em Série:</strong> os capacitores são ligados em sequência. A capacitância equivalente é sempre menor que a do menor capacitor.</p>
+      <div class="info-box">1/C<sub>eq</sub> = 1/C₁ + 1/C₂ + 1/C₃ + ...</div>
+      <p><strong>Associação em Paralelo:</strong> os capacitores compartilham os mesmos terminais. A capacitância equivalente é a soma das capacitâncias.</p>
+      <div class="info-box">C<sub>eq</sub> = C₁ + C₂ + C₃ + ...</div>
+      <p><strong>Associação Mista:</strong> combinação das duas formas. Resolve-se reduzindo os grupos paralelos e séries progressivamente até obter a capacitância equivalente total.</p>
+    </div>
+
+    <div class="topic reveal">
+      <h3>Simbologia</h3>
+      <p>Na simbologia eletrônica, o capacitor é representado por dois segmentos paralelos (as placas). Existem variações:</p>
+      <ul class="styled">
+        <li><strong>Capacitor fixo não polarizado:</strong> dois traços retos e paralelos</li>
+        <li><strong>Capacitor fixo polarizado (eletrolítico):</strong> um traço reto e uma curva (indica polaridade — deve respeitar + e −)</li>
+        <li><strong>Capacitor variável:</strong> símbolo com seta diagonal indicando ajuste</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== MAGNETISMO ======================== -->
+  <section class="section reveal" id="magnetismo">
+    <div class="section-header">
+      <span class="section-number mag">02 / MAG</span>
+      <h2>Magnetismo</h2>
+    </div>
+
+    <div class="topic mag reveal">
+      <h3>Fenômenos Magnéticos Naturais</h3>
+      <p>O magnetismo é uma propriedade física associada ao movimento de cargas elétricas. O <strong>ímã natural</strong> (magnetita, Fe₃O₄) é encontrado na natureza e possui capacidade intrínseca de atrair materiais ferrosos sem qualquer fonte de energia externa.</p>
+      <p>A Terra também se comporta como um grande ímã, com um campo magnético que vai do polo geográfico sul ao polo norte, sendo responsável pela orientação das bússolas. Os polos magnéticos de um ímã são denominados <em>polo norte (N)</em> e <em>polo sul (S)</em>.</p>
+    </div>
+
+    <div class="topic mag reveal">
+      <h3>Campos Magnéticos — Noções</h3>
+      <p>Um <strong>campo magnético</strong> é uma região do espaço onde se manifestam forças magnéticas. É representado por <em>linhas de campo</em> (linhas de indução) que saem do polo Norte, percorrem o espaço externo e entram pelo polo Sul, formando curvas fechadas.</p>
+      <ul class="styled">
+        <li>Linhas mais próximas indicam campo mais intenso</li>
+        <li>Linhas nunca se cruzam</li>
+        <li>A grandeza que mede a intensidade do campo é a <strong>indução magnética B</strong>, medida em Tesla (T)</li>
+      </ul>
+    </div>
+
+    <div class="topic mag reveal">
+      <h3>Lei de Atração e Repulsão</h3>
+      <div class="info-box mag">Polos iguais se repelem · Polos opostos se atraem</div>
+      <p>Esta é a lei fundamental do magnetismo. Dois polos Norte se repelem; um polo Norte e um polo Sul se atraem. Não existem monopolos magnéticos isolados — ao dividir um ímã, surgem dois novos ímãs completos.</p>
+    </div>
+
+    <div class="topic mag reveal">
+      <h3>Características de Materiais Magnéticos</h3>
+      <table>
+        <tr><th>Tipo</th><th>Comportamento</th><th>Exemplos</th></tr>
+        <tr>
+          <td><strong>Ferromagnético</strong></td>
+          <td>Fortemente atraído por ímãs; pode ser magnetizado permanentemente. Apresenta domínios magnéticos que se alinham.</td>
+          <td>Ferro, Níquel, Cobalto</td>
+        </tr>
+        <tr>
+          <td><strong>Paramagnético</strong></td>
+          <td>Fracamente atraído por ímãs. O alinhamento ocorre apenas na presença de campo externo e desaparece ao retirá-lo.</td>
+          <td>Alumínio, Platina, Manganês</td>
+        </tr>
+        <tr>
+          <td><strong>Diamagnético</strong></td>
+          <td>Levemente repelido por ímãs. Campo externo induz magnetização contrária ao campo aplicado.</td>
+          <td>Cobre, Bismuto, Ouro, Prata</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== ELETROMAGNETISMO ======================== -->
+  <section class="section reveal" id="eletromagnetismo">
+    <div class="section-header">
+      <span class="section-number em">03 / EM</span>
+      <h2>Eletromagnetismo</h2>
+    </div>
+
+    <div class="topic em reveal">
+      <h3>Indução Magnética</h3>
+      <p>A <strong>indução magnética (B)</strong>, também chamada de densidade de fluxo magnético, é a grandeza vetorial que descreve a intensidade e a direção do campo magnético em um ponto do espaço. É medida em <strong>Tesla (T)</strong> no SI.</p>
+      <p>A lei de Faraday estabelece que uma variação do fluxo magnético (Φ) através de um circuito indutor uma força eletromotriz. O fluxo magnético é dado por:</p>
+      <div class="info-box em">Φ = B · A · cos(θ) &nbsp;[Weber = Wb = V·s]</div>
+    </div>
+
+    <div class="topic em reveal">
+      <h3>Força Eletromotriz Induzida (FEM)</h3>
+      <p>Quando o fluxo magnético que atravessa um circuito varia no tempo, surge uma <strong>força eletromotriz (FEM) induzida</strong>, conforme a <em>Lei de Faraday-Lenz</em>:</p>
+      <div class="info-box em">ε = −ΔΦ/Δt &nbsp;&nbsp;(em Volts)</div>
+      <p>O sinal negativo expressa a <strong>Lei de Lenz</strong>: a corrente induzida tem sentido tal que seu campo magnético se opõe à variação que a originou. Isso é fundamental para o funcionamento de geradores, transformadores e motores elétricos.</p>
+    </div>
+
+    <div class="topic em reveal">
+      <h3>Regra da Mão Direita para Campos Eletromagnéticos</h3>
+      <p>A <strong>regra da mão direita</strong> permite determinar o sentido do campo magnético gerado por um condutor percorrido por corrente:</p>
+      <ul class="styled">
+        <li><strong>Fio retilíneo:</strong> aponte o polegar no sentido da corrente; os demais dedos curvados indicam o sentido circular do campo magnético ao redor do condutor.</li>
+        <li><strong>Solenoide / bobina:</strong> curve os dedos no sentido da corrente nas espiras; o polegar apontará para o polo Norte do solenoide.</li>
+      </ul>
+    </div>
+
+    <div class="topic em reveal">
+      <h3>Eletroímã — Funcionamento e Aplicações</h3>
+      <p>Um <strong>eletroímã</strong> é um dispositivo que produz campo magnético apenas enquanto corrente elétrica o percorre. É construído enrolando um fio condutor (formando uma bobina) em torno de um núcleo ferromagnético.</p>
+      <ul class="styled">
+        <li><strong>Funcionamento:</strong> a corrente elétrica gera campo magnético; o núcleo amplifica esse campo ao se magnetizar</li>
+        <li><strong>Aplicações:</strong> guindastes industriais, campainha elétrica, alto-falantes, relés, tomografias (IRM), separadores de sucata, fechaduras magnéticas</li>
+        <li>A intensidade pode ser controlada variando a corrente ou o número de espiras</li>
+      </ul>
+    </div>
+
+    <div class="topic em reveal">
+      <h3>Relé Eletromecânico</h3>
+      <p>O <strong>relé eletromecânico</strong> é um interruptor controlado eletricamente por meio de um eletroímã. Permite que um sinal de baixa potência controle circuitos de alta potência, com isolamento elétrico entre eles.</p>
+      <p><strong>Funcionamento:</strong> quando a bobina é energizada, o campo magnético atrai a armadura metálica, que aciona mecanicamente os contatos (NA/NF). Ao desenergizar, uma mola retorna ao estado original.</p>
+      <table>
+        <tr><th>Terminologia</th><th>Significado</th></tr>
+        <tr><td><strong>NA (Normalmente Aberto)</strong></td><td>Contato aberto quando a bobina está sem corrente; fecha ao energizar</td></tr>
+        <tr><td><strong>NF (Normalmente Fechado)</strong></td><td>Contato fechado em repouso; abre ao energizar</td></tr>
+        <tr><td><strong>COM (Comum)</strong></td><td>Terminal comum compartilhado por NA e NF</td></tr>
+      </table>
+      <p style="margin-top:12px"><strong>Especificações técnicas:</strong> tensão da bobina (ex.: 5V, 12V, 24V DC), corrente da bobina, capacidade de carga dos contatos (ex.: 10A / 250VAC), número de polos.</p>
+      <p><strong>Aplicações:</strong> automação industrial, sistemas de alarme, proteção de motores, inversão de marcha, painéis elétricos.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== INDUTORES ======================== -->
+  <section class="section reveal" id="indutores">
+    <div class="section-header">
+      <span class="section-number ind">04 / IND</span>
+      <h2>Indutores</h2>
+    </div>
+
+    <div class="topic ind reveal">
+      <h3>Conceito de Indutância</h3>
+      <p>Um <strong>indutor</strong> (ou bobina) é um componente que armazena energia na forma de campo magnético quando percorrido por corrente elétrica. A <strong>indutância (L)</strong> é a propriedade que quantifica essa capacidade de armazenamento, definida como:</p>
+      <div class="info-box ind">ε = −L · (ΔI/Δt) &nbsp;&nbsp;→&nbsp;&nbsp; L em Henry [H]</div>
+      <p>Fisicamente, a indutância depende do número de espiras, da área da seção transversal, do comprimento da bobina e da permeabilidade magnética do núcleo. Indutores resistem a variações bruscas de corrente.</p>
+    </div>
+
+    <div class="topic ind reveal">
+      <h3>Unidade de Medida e Submúltiplos</h3>
+      <p>A unidade de indutância no SI é o <strong>Henry (H)</strong>, em homenagem ao físico Joseph Henry. Na prática eletrônica, são mais comuns os submúltiplos:</p>
+      <table>
+        <tr><th>Símbolo</th><th>Nome</th><th>Equivalência</th></tr>
+        <tr><td><span class="symbol" style="color:var(--green)">mH</span></td><td>Milihenry</td><td>10⁻³ H</td></tr>
+        <tr><td><span class="symbol" style="color:var(--green)">μH</span></td><td>Microhenry</td><td>10⁻⁶ H</td></tr>
+        <tr><td><span class="symbol" style="color:var(--green)">nH</span></td><td>Nanohenry</td><td>10⁻⁹ H</td></tr>
+      </table>
+    </div>
+
+    <div class="topic ind reveal">
+      <h3>Associação de Indutores</h3>
+      <p><em>(sem acoplamento magnético mútuo entre eles)</em></p>
+      <p><strong>Associação em Série:</strong> a indutância equivalente é a soma de todas.</p>
+      <div class="info-box ind">L<sub>eq</sub> = L₁ + L₂ + L₃ + ...</div>
+      <p><strong>Associação em Paralelo:</strong> o inverso da indutância equivalente é a soma dos inversos.</p>
+      <div class="info-box ind">1/L<sub>eq</sub> = 1/L₁ + 1/L₂ + 1/L₃ + ...</div>
+      <p><strong>Associação Mista:</strong> combina as duas formas, sendo necessário resolver progressivamente os grupos até chegar à indutância total.</p>
+    </div>
+
+    <div class="topic ind reveal">
+      <h3>Simbologia</h3>
+      <p>Na simbologia eletrônica, o indutor é representado por uma série de arcos ou espiras sobre uma linha horizontal. Variações comuns:</p>
+      <ul class="styled">
+        <li><strong>Indutor de ar (sem núcleo):</strong> série de semicírculos sobre a linha do condutor</li>
+        <li><strong>Indutor com núcleo de ferro:</strong> linhas paralelas sólidas acima dos semicírculos</li>
+        <li><strong>Indutor com núcleo de ferrite:</strong> linhas tracejadas acima dos semicírculos</li>
+        <li><strong>Indutor variável:</strong> seta diagonal sobre o símbolo básico</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== QUESTÕES ======================== -->
+  <section id="questoes" class="reveal">
+    <div class="questoes-header">
+      <div>
+        <div class="questoes-title">Estudo Dirigido</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-muted);margin-top:6px;">20 questões · todos os temas</div>
+      </div>
+      <span class="badge">GABARITO INTERATIVO</span>
+    </div>
+
+    <div id="lista-questoes"></div>
+
+    <div class="score-bar" id="score-bar">
+      <div class="score-label">RESULTADO PARCIAL</div>
+      <div class="score-display" id="score-display"><span>0</span> / 20</div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Estudo Dirigido — Eletricidade & Eletromagnetismo &nbsp;·&nbsp; Todos os direitos reservados</p>
+  </footer>
+
+</div><!-- /container -->
+
+<script>
+const questoes = [
+  // CAPACITORES
+  {
+    num: 1, tema: 'CAP', tag: 'tag-cap',
+    texto: 'O que é capacitância e qual a sua relação com a carga armazenada e a tensão aplicada?',
+    alts: [
+      'É a resistência ao fluxo de corrente, calculada por R = V / I.',
+      'É a capacidade de armazenar energia magnética, medida em Henry.',
+      'É a propriedade de armazenar carga elétrica, definida por C = Q / V.',
+      'É a potência dissipada pelo componente, expressa em Watts.'
+    ],
+    correta: 2,
+    feedback: 'Correto! A capacitância C = Q/V descreve quantas cargas um capacitor acumula por unidade de tensão. Unidade: Farad (F).'
+  },
+  {
+    num: 2, tema: 'CAP', tag: 'tag-cap',
+    texto: 'Qual é a unidade de medida da capacitância no Sistema Internacional (SI)?',
+    alts: ['Henry (H)', 'Ohm (Ω)', 'Farad (F)', 'Tesla (T)'],
+    correta: 2,
+    feedback: 'O Farad (F) é a unidade de capacitância, em homenagem a Michael Faraday. Na prática usa-se μF, nF e pF.'
+  },
+  {
+    num: 3, tema: 'CAP', tag: 'tag-cap',
+    texto: 'Em uma associação de capacitores em paralelo, qual é a fórmula para a capacitância equivalente?',
+    alts: [
+      '1/Ceq = 1/C₁ + 1/C₂ + ...',
+      'Ceq = C₁ + C₂ + C₃ + ...',
+      'Ceq = C₁ × C₂ / (C₁ + C₂)',
+      'Ceq = C₁ − C₂'
+    ],
+    correta: 1,
+    feedback: 'Em paralelo, Ceq = C₁ + C₂ + ... Os capacitores compartilham os mesmos terminais e as capacitâncias somam-se.'
+  },
+  {
+    num: 4, tema: 'CAP', tag: 'tag-cap',
+    texto: 'Três capacitores de 6 μF estão ligados em série. Qual é a capacitância equivalente?',
+    alts: ['18 μF', '3 μF', '2 μF', '6 μF'],
+    correta: 2,
+    feedback: '1/Ceq = 1/6 + 1/6 + 1/6 = 3/6 = 1/2 → Ceq = 2 μF. Em série, a capacitância equivalente é sempre menor que a menor delas.'
+  },
+  {
+    num: 5, tema: 'CAP', tag: 'tag-cap',
+    texto: 'No símbolo do capacitor eletrolítico, o que a curvatura em um dos lados indica?',
+    alts: [
+      'Que o componente é variável.',
+      'Que o componente não tem polaridade.',
+      'Que o componente é polarizado e deve respeitar o terminal positivo e negativo.',
+      'Que o dielétrico é cerâmico.'
+    ],
+    correta: 2,
+    feedback: 'O traço curvo indica o terminal negativo (−). Capacitores eletrolíticos são polarizados e a inversão pode destruí-los.'
+  },
+  // MAGNETISMO
+  {
+    num: 6, tema: 'MAG', tag: 'tag-mag',
+    texto: 'O ímã natural (magnetita) tem polos magnéticos bem definidos. O que acontece ao cortar um ímã ao meio?',
+    alts: [
+      'Obtêm-se um polo norte isolado e um polo sul isolado.',
+      'O magnetismo desaparece nos dois pedaços.',
+      'Cada pedaço forma um novo ímã com polo norte e polo sul.',
+      'Apenas o polo norte permanece no fragmento maior.'
+    ],
+    correta: 2,
+    feedback: 'Não existem monopolos magnéticos! Ao dividir um ímã, cada fragmento ganha novos polos, formando dois ímãs completos.'
+  },
+  {
+    num: 7, tema: 'MAG', tag: 'tag-mag',
+    texto: 'Qual é a lei fundamental do magnetismo em relação à interação entre polos magnéticos?',
+    alts: [
+      'Polos opostos se repelem; polos iguais se atraem.',
+      'Polos iguais se repelem; polos opostos se atraem.',
+      'Todos os polos sempre se atraem.',
+      'A atração depende apenas da distância, não do tipo de polo.'
+    ],
+    correta: 1,
+    feedback: 'Polos iguais (N-N ou S-S) se repelem; polos opostos (N-S) se atraem. Analogia com cargas elétricas, mas aplicada ao magnetismo.'
+  },
+  {
+    num: 8, tema: 'MAG', tag: 'tag-mag',
+    texto: 'O ferro é um material ferromagnético. O que diferencia materiais ferromagnéticos dos paramagnéticos?',
+    alts: [
+      'Ferromagnéticos são repelidos por ímãs; paramagnéticos são fortemente atraídos.',
+      'Ferromagnéticos são fortemente atraídos e podem ser magnetizados permanentemente; paramagnéticos são fracamente atraídos e perdem o magnetismo ao retirar o campo.',
+      'Ambos têm o mesmo comportamento magnético.',
+      'Ferromagnéticos conduzem eletricidade; paramagnéticos não.'
+    ],
+    correta: 1,
+    feedback: 'Ferromagnéticos (Fe, Ni, Co) têm domínios que se alinham fortemente e permanecem magnetizados. Paramagnéticos (Al, Pt) se alinham fracamente e só com campo externo.'
+  },
+  {
+    num: 9, tema: 'MAG', tag: 'tag-mag',
+    texto: 'O bismuto é um exemplo de material diamagnético. Qual é a característica principal desse tipo de material?',
+    alts: [
+      'É fortemente atraído por qualquer ímã.',
+      'Pode ser magnetizado permanentemente.',
+      'É levemente repelido por campos magnéticos, pois induz magnetização contrária ao campo aplicado.',
+      'Não apresenta nenhuma interação com campos magnéticos.'
+    ],
+    correta: 2,
+    feedback: 'Materiais diamagnéticos (Cu, Bi, Au) geram magnetização oposta ao campo externo aplicado, resultando em leve repulsão.'
+  },
+  {
+    num: 10, tema: 'MAG', tag: 'tag-mag',
+    texto: 'As linhas de campo magnético de um ímã saem do polo Norte e entram no polo Sul. O que a proximidade entre essas linhas indica?',
+    alts: [
+      'Que o campo magnético é mais fraco naquela região.',
+      'Que o campo magnético é mais intenso naquela região.',
+      'Que as linhas se cruzam nessa região.',
+      'Que há ausência de campo magnético.'
+    ],
+    correta: 1,
+    feedback: 'Linhas de campo mais próximas indicam maior intensidade do campo magnético. Essa é a forma de representar graficamente a intensidade do campo.'
+  },
+  // ELETROMAGNETISMO
+  {
+    num: 11, tema: 'EM', tag: 'tag-em',
+    texto: 'A Lei de Faraday afirma que uma FEM é induzida em um circuito quando ocorre variação de fluxo magnético. O que a Lei de Lenz estabelece sobre o sentido dessa corrente induzida?',
+    alts: [
+      'A corrente induzida tem o mesmo sentido da variação do fluxo que a originou.',
+      'A corrente induzida tem sentido tal que o campo gerado por ela se opõe à variação de fluxo que a originou.',
+      'A corrente induzida é sempre nula.',
+      'A corrente induzida é independente da variação do fluxo magnético.'
+    ],
+    correta: 1,
+    feedback: 'A Lei de Lenz é o "princípio da oposição": a natureza resiste à mudança. O campo da corrente induzida sempre se opõe à variação que gerou a indução.'
+  },
+  {
+    num: 12, tema: 'EM', tag: 'tag-em',
+    texto: 'Ao aplicar a regra da mão direita em um fio retilíneo percorrido por corrente, o que o polegar e os dedos curvados representam respectivamente?',
+    alts: [
+      'Sentido do campo magnético e sentido da corrente.',
+      'Sentido da corrente no fio e sentido circular do campo magnético ao redor do condutor.',
+      'Direção da força magnética e sentido da corrente.',
+      'Polo Norte e Polo Sul do campo gerado.'
+    ],
+    correta: 1,
+    feedback: 'Na regra da mão direita para fio reto: polegar = sentido da corrente; dedos curvados = sentido das linhas de campo ao redor do fio.'
+  },
+  {
+    num: 13, tema: 'EM', tag: 'tag-em',
+    texto: 'Qual é a principal diferença entre um ímã permanente e um eletroímã?',
+    alts: [
+      'O eletroímã sempre tem campo magnético mais fraco que o ímã permanente.',
+      'O eletroímã gera campo magnético apenas quando percorrido por corrente elétrica, permitindo ligar e desligar o magnetismo.',
+      'O ímã permanente pode ser controlado por corrente elétrica.',
+      'Ambos têm exatamente o mesmo funcionamento e aplicações.'
+    ],
+    correta: 1,
+    feedback: 'A grande vantagem do eletroímã é o controle: ao ligar ou desligar a corrente (ou variar sua intensidade), o campo magnético é controlado eletronicamente.'
+  },
+  {
+    num: 14, tema: 'EM', tag: 'tag-em',
+    texto: 'O relé eletromecânico possui contatos NA (Normalmente Aberto) e NF (Normalmente Fechado). Qual o estado dos contatos NA quando a bobina está DESENERGIZADA?',
+    alts: [
+      'Fechado — permite passagem de corrente.',
+      'Aberto — não permite passagem de corrente.',
+      'Em curto-circuito.',
+      'O estado é indefinido sem tensão aplicada.'
+    ],
+    correta: 1,
+    feedback: 'NA = Normalmente Aberto: sem corrente na bobina, o contato está aberto (circuito aberto). Ao energizar, a armadura fecha esse contato.'
+  },
+  {
+    num: 15, tema: 'EM', tag: 'tag-em',
+    texto: 'Em qual das situações abaixo o relé eletromecânico oferece uma vantagem fundamental em relação a um simples interruptor manual?',
+    alts: [
+      'Quando se deseja aumentar a resistência elétrica do circuito.',
+      'Quando um sinal de baixa potência (ex: 5V DC) precisa controlar um circuito de alta potência (ex: 220V AC), com isolamento elétrico entre eles.',
+      'Quando se necessita armazenar energia elétrica.',
+      'Quando se deseja converter corrente alternada em contínua.'
+    ],
+    correta: 1,
+    feedback: 'Essa é a principal aplicação do relé: isolamento galvânico e controle de alta potência com sinal fraco. Um microcontrolador de 3,3V pode controlar uma carga de 220V com segurança.'
+  },
+  // INDUTORES
+  {
+    num: 16, tema: 'IND', tag: 'tag-ind',
+    texto: 'O que é indutância e qual comportamento fundamental o indutor apresenta em relação às variações de corrente?',
+    alts: [
+      'É a capacidade de armazenar carga elétrica; o indutor facilita variações bruscas de corrente.',
+      'É a propriedade de armazenar energia em campo magnético; o indutor resiste a variações bruscas de corrente.',
+      'É a resistência ao fluxo de corrente contínua; o indutor bloqueia totalmente a corrente.',
+      'É a capacidade de dissipar energia na forma de calor.'
+    ],
+    correta: 1,
+    feedback: 'O indutor armazena energia em campo magnético e sua indutância L determina a oposição à variação de corrente: ε = −L·(ΔI/Δt).'
+  },
+  {
+    num: 17, tema: 'IND', tag: 'tag-ind',
+    texto: 'Qual é a unidade de medida da indutância no SI e em homenagem a qual cientista foi nomeada?',
+    alts: [
+      'Tesla (T) — Nikola Tesla',
+      'Farad (F) — Michael Faraday',
+      'Henry (H) — Joseph Henry',
+      'Weber (Wb) — Wilhelm Weber'
+    ],
+    correta: 2,
+    feedback: 'Henry (H) é a unidade de indutância, em homenagem ao físico americano Joseph Henry, que descobriu a indução eletromagnética simultaneamente a Faraday.'
+  },
+  {
+    num: 18, tema: 'IND', tag: 'tag-ind',
+    texto: 'Dois indutores de 8 mH e 4 mH são associados em série. Qual é a indutância equivalente?',
+    alts: [
+      '2,67 mH', '4 mH', '8 mH', '12 mH'
+    ],
+    correta: 3,
+    feedback: 'Em série: Leq = L₁ + L₂ = 8 + 4 = 12 mH. A associação em série de indutores soma as indutâncias (sem acoplamento mútuo).'
+  },
+  {
+    num: 19, tema: 'IND', tag: 'tag-ind',
+    texto: 'No símbolo eletrônico, como se diferencia visualmente um indutor com núcleo de ferro de um indutor a ar?',
+    alts: [
+      'O indutor de ferro tem uma seta diagonal; o de ar não tem.',
+      'O indutor de ferro tem linhas paralelas sólidas sobre os semicírculos; o de ar possui apenas os semicírculos sem linhas adicionais.',
+      'O indutor de ferro é representado por um retângulo; o de ar por um círculo.',
+      'Não há diferença visual entre os dois.'
+    ],
+    correta: 1,
+    feedback: 'Linhas sólidas paralelas = núcleo de ferro. Linhas tracejadas = núcleo de ferrite. Sem linhas = núcleo de ar. A seta diagonal indica indutor variável.'
+  },
+  {
+    num: 20, tema: 'IND', tag: 'tag-ind',
+    texto: 'Qual das grandezas a seguir está corretamente associada ao seu componente e unidade de medida?',
+    alts: [
+      'Capacitância — Indutor — Henry (H)',
+      'Indutância — Capacitor — Farad (F)',
+      'Indutância — Indutor — Henry (H) e Capacitância — Capacitor — Farad (F)',
+      'Indutância — Resistor — Ohm (Ω)'
+    ],
+    correta: 2,
+    feedback: 'Perfeito! Indutor → Indutância (H); Capacitor → Capacitância (F); Resistor → Resistência (Ω). Cada componente tem sua grandeza e unidade específicas.'
+  }
+];
+
+let respondidas = 0;
+let acertos = 0;
+
+function renderQuestoes() {
+  const lista = document.getElementById('lista-questoes');
+  questoes.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'questao reveal';
+    div.id = `q${idx}`;
+
+    const altsHTML = q.alts.map((a, i) => `
+      <button class="alt" data-q="${idx}" data-i="${i}" onclick="responder(${idx}, ${i})">
+        <span class="alt-letter">${'ABCD'[i]}</span>
+        <span>${a}</span>
+      </button>
+    `).join('');
+
+    div.innerHTML = `
+      <div class="questao-num">
+        QUESTÃO ${String(q.num).padStart(2,'0')}
+        <span class="questao-tag ${q.tag}">${q.tema}</span>
+      </div>
+      <p class="questao-text">${q.texto}</p>
+      <div class="alternativas" id="alts-${idx}">${altsHTML}</div>
+      <div class="feedback" id="fb-${idx}"></div>
+    `;
+    lista.appendChild(div);
+  });
+}
+
+function responder(qi, ai) {
+  const container = document.getElementById(`alts-${qi}`);
+  if (container.dataset.done) return;
+  container.dataset.done = '1';
+
+  const q = questoes[qi];
+  const btns = container.querySelectorAll('.alt');
+  btns.forEach(b => { b.style.pointerEvents = 'none'; b.style.cursor = 'default'; });
+
+  const isCorrect = ai === q.correta;
+  btns[ai].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) btns[q.correta].classList.add('correct');
+
+  const fb = document.getElementById(`fb-${qi}`);
+  fb.textContent = (isCorrect ? '✓ ' : '✗ Resposta correta: ' + 'ABCD'[q.correta] + ' — ') + q.feedback;
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+
+  respondidas++;
+  if (isCorrect) acertos++;
+
+  // Update score
+  const scoreBar = document.getElementById('score-bar');
+  scoreBar.classList.add('show');
+  document.getElementById('score-display').innerHTML = `<span>${acertos}</span> / ${respondidas}`;
+  const pct = (acertos / respondidas) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// Scroll reveal
+function checkReveal() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+}
+
+// Nav pills smooth scroll
+document.querySelectorAll('.nav-pill').forEach(pill => {
+  pill.addEventListener('click', e => {
+    const href = pill.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+renderQuestoes();
+window.addEventListener('scroll', checkReveal);
+window.addEventListener('load', checkReveal);
+checkReveal();
+</script>
+</body>
+</html>
