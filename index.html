@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eletrotécnica — Guia Interativo SENAI Vol. I</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c10;
+  --surface:#0e1318;
+  --card:#141a22;
+  --card2:#1a2230;
+  --border:#1e2a38;
+  --border2:#253347;
+  --amber:#f59e0b;
+  --amber2:#fbbf24;
+  --blue:#38bdf8;
+  --blue2:#7dd3fc;
+  --green:#4ade80;
+  --red:#f87171;
+  --purple:#a78bfa;
+  --teal:#2dd4bf;
+  --orange:#fb923c;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --dim:#334155;
+  --r:8px;--rl:14px;
+  --glow-amber:rgba(245,158,11,0.12);
+  --glow-blue:rgba(56,189,248,0.10);
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  line-height:1.65;
+  font-size:14.5px;
+  min-height:100vh;
+}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(245,158,11,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(56,189,248,0.04) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── NAV ── */
+.topnav{
+  background:rgba(14,19,24,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  position:sticky;
+  top:0;
+  z-index:100;
+  flex-wrap:wrap;
+}
+.topnav-logo{
+  font-weight:700;
+  font-size:1rem;
+  color:var(--amber);
+  padding:0.8rem 0;
+  white-space:nowrap;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  letter-spacing:.02em;
+}
+.topnav-logo .logo-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--amber);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.nav-links{display:flex;gap:0;overflow-x:auto;flex:1}
+.nav-link{
+  padding:0.75rem 1rem;
+  font-size:11.5px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  color:var(--muted);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:color .2s,border-color .2s;
+}
+.nav-link:hover,.nav-link.active{color:var(--amber);border-color:var(--amber)}
+.nav-score{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+  padding:0 0 0 1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.nav-score b{color:var(--green)}
+
+/* ── PAGES ── */
+.page{display:none;padding:2rem 1.5rem;max-width:980px;margin:0 auto;position:relative;z-index:1}
+.page.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg, var(--card) 0%, rgba(20,26,34,0.7) 100%);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:2.5rem;
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:-80px;right:-80px;
+  width:400px;height:400px;
+  background:radial-gradient(circle, var(--glow-amber) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'⚡';
+  position:absolute;
+  right:2rem;bottom:1rem;
+  font-size:6rem;
+  opacity:.04;
+  line-height:1;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--amber);
+  background:rgba(245,158,11,.1);
+  border:1px solid rgba(245,158,11,.2);
+  border-radius:20px;
+  padding:4px 14px;
+  margin-bottom:1.2rem;
+}
+.hero h1{
+  font-size:clamp(1.7rem,4vw,2.6rem);
+  font-weight:700;
+  letter-spacing:-.04em;
+  margin-bottom:.6rem;
+  line-height:1.2;
+  background:linear-gradient(135deg,var(--text) 30%,var(--amber));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{color:var(--muted);max-width:620px;margin-bottom:1.75rem;font-size:14px;line-height:1.75}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px}
+.hstat{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:.9rem;
+  text-align:center;
+  transition:border-color .2s;
+}
+.hstat:hover{border-color:var(--amber)}
+.hstat-val{
+  font-size:1.9rem;
+  font-weight:700;
+  color:var(--amber);
+  line-height:1;
+  font-family:'JetBrains Mono',monospace;
+}
+.hstat-lbl{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.04em}
+
+/* ── TOPIC CARDS ── */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin-bottom:2rem}
+.tcard{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.25rem;
+  cursor:pointer;
+  transition:border-color .2s,transform .15s,box-shadow .2s;
+  position:relative;
+  overflow:hidden;
+}
+.tcard::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, var(--glow-amber) 0%, transparent 60%);
+  opacity:0;
+  transition:opacity .2s;
+}
+.tcard:hover{border-color:var(--amber);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.tcard:hover::before{opacity:1}
+.tcard-icon{font-size:1.7rem;margin-bottom:.5rem}
+.tcard-title{font-size:.9rem;font-weight:700;margin-bottom:.3rem;position:relative}
+.tcard-sub{font-size:12px;color:var(--muted);line-height:1.55;position:relative}
+.tcard-tag{
+  display:inline-block;
+  font-size:10px;font-weight:600;
+  color:var(--amber);
+  background:rgba(245,158,11,.08);
+  border:1px solid rgba(245,158,11,.18);
+  border-radius:20px;
+  padding:2px 9px;
+  margin-top:.6rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  position:relative;
+}
+
+/* ── CONTENT MODULE ── */
+.module{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.75rem;margin-bottom:1.5rem}
+.module.open{display:block;animation:fadeUp .25s ease}
+.mod-head{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.mod-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}
+.mod-title{font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
+.mod-sub{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+.btn-close{
+  margin-left:auto;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  color:var(--muted);
+  font-size:11px;
+  padding:4px 10px;
+  cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.btn-close:hover{background:var(--border);color:var(--text);border-color:var(--border2)}
+
+/* ── INFO BOXES ── */
+.infobox{
+  border-left:3px solid;
+  border-radius:0 var(--r) var(--r) 0;
+  padding:.8rem 1rem;
+  margin:.75rem 0;
+  font-size:13px;
+  line-height:1.7;
+}
+.infobox.amber{border-color:var(--amber);background:rgba(245,158,11,.06);color:#fbbf24}
+.infobox.blue{border-color:var(--blue);background:rgba(56,189,248,.06);color:var(--blue2)}
+.infobox.green{border-color:var(--green);background:rgba(74,222,128,.06);color:#86efac}
+.infobox.red{border-color:var(--red);background:rgba(248,113,113,.06);color:#fca5a5}
+.infobox.purple{border-color:var(--purple);background:rgba(167,139,250,.06);color:#c4b5fd}
+.infobox.teal{border-color:var(--teal);background:rgba(45,212,191,.06);color:#5eead4}
+.infobox b{font-weight:700}
+
+/* ── FORMULA BOX ── */
+.formula-box{
+  background:rgba(245,158,11,.05);
+  border:1px solid rgba(245,158,11,.2);
+  border-radius:var(--r);
+  padding:1rem 1.25rem;
+  margin:.75rem 0;
+  font-size:1.05rem;
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--amber);
+  letter-spacing:.03em;
+}
+.formula-box small{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-family:'Space Grotesk',sans-serif;
+  margin-top:6px;
+  letter-spacing:0;
+}
+
+/* ── TABLE ── */
+.eltable{width:100%;border-collapse:collapse;font-size:12.5px;margin:.75rem 0}
+.eltable th{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  padding:7px 10px;
+  text-align:left;
+  font-weight:600;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--muted);
+}
+.eltable td{border:1px solid var(--border);padding:7px 10px;vertical-align:middle}
+.eltable tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em}
+.badge.amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge.green{background:rgba(74,222,128,.15);color:var(--green)}
+.badge.blue{background:rgba(56,189,248,.15);color:var(--blue)}
+.badge.red{background:rgba(248,113,113,.15);color:var(--red)}
+
+/* ── CALC BOX ── */
+.calc-box{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.25rem;
+  margin:.75rem 0;
+}
+.calc-title{
+  font-size:12px;
+  font-weight:700;
+  color:var(--amber);
+  margin-bottom:.75rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.calc-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+.calc-row label{font-size:12px;color:var(--muted);min-width:90px}
+.calc-row input{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  color:var(--text);
+  font-size:13.5px;
+  font-family:'JetBrains Mono',monospace;
+  padding:6px 10px;
+  width:120px;
+  outline:none;
+  transition:border-color .2s;
+}
+.calc-row input:focus{border-color:var(--amber)}
+.calc-row .unit{font-size:11px;color:var(--dim)}
+.calc-result{
+  background:rgba(74,222,128,.05);
+  border:1px solid rgba(74,222,128,.2);
+  border-radius:var(--r);
+  padding:.6rem 1rem;
+  font-size:.95rem;
+  font-weight:700;
+  color:var(--green);
+  font-family:'JetBrains Mono',monospace;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-top:.5rem;
+}
+.calc-result span{font-size:11px;font-weight:400;color:var(--muted);font-family:inherit}
+.btn-calc{
+  background:var(--amber);
+  border:none;
+  border-radius:var(--r);
+  color:#000;
+  font-size:11.5px;
+  font-weight:700;
+  padding:6px 18px;
+  cursor:pointer;
+  transition:opacity .2s,transform .1s;
+  font-family:'Space Grotesk',sans-serif;
+  letter-spacing:.04em;
+}
+.btn-calc:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── ANIM WRAP ── */
+.anim-wrap{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1rem;
+  margin:.75rem 0;
+  overflow:hidden;
+}
+.anim-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+svg.anim{display:block;max-width:100%;height:auto}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.75rem 0}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}}
+
+/* ── SECTION TITLE ── */
+.stitle{
+  font-size:.8rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  color:var(--amber);
+  margin:1.5rem 0 .75rem;
+  padding-bottom:.4rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.stitle::before{content:'▸';opacity:.6}
+
+p{margin-bottom:.75rem;color:var(--muted);font-size:13.5px;line-height:1.75}
+p strong{color:var(--text)}
+p b{color:var(--amber2)}
+
+/* ── QUIZ ── */
+.quiz-hero{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.5rem 2rem;
+  margin-bottom:1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.quiz-hero::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,var(--glow-amber) 0%,transparent 70%);
+}
+.quiz-hero-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--amber);margin-bottom:.4rem}
+.quiz-hero-title{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.3rem}
+.quiz-hero-sub{font-size:12.5px;color:var(--muted)}
+
+.scorebar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:8px 14px;
+  margin-bottom:1rem;
+  font-size:11.5px;
+  color:var(--muted);
+}
+.prog-track{flex:1;height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--amber),var(--green));
+  border-radius:99px;
+  transition:width .5s ease;
+  width:0%;
+}
+.sval{font-size:14px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace}
+.dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s,transform .2s}
+.dot.ok{background:var(--green)}
+.dot.ng{background:var(--red)}
+.dot.cur{background:var(--amber);transform:scale(1.3)}
+
+.qcard{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.5rem;
+  border-top:2px solid var(--amber);
+}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.q-num{
+  font-size:10.5px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+.q-tag{
+  font-size:10px;
+  font-weight:700;
+  color:var(--amber);
+  background:rgba(245,158,11,.08);
+  border:1px solid rgba(245,158,11,.18);
+  border-radius:20px;
+  padding:2px 9px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.q-text{font-size:.95rem;line-height:1.75;margin-bottom:1.1rem;color:var(--text)}
+.q-text b{color:var(--amber2)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.opts{grid-template-columns:1fr}}
+.opt{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:10px 12px;
+  cursor:pointer;
+  text-align:left;
+  color:var(--text);
+  font-size:12.5px;
+  line-height:1.5;
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+  transition:border-color .15s,background .15s,transform .1s;
+  font-family:'Space Grotesk',sans-serif;
+}
+.opt:hover:not(:disabled){
+  border-color:var(--amber);
+  background:rgba(245,158,11,.05);
+  transform:translateY(-1px);
+}
+.opt:disabled{cursor:default;transform:none}
+.opt-let{
+  min-width:22px;height:22px;
+  border-radius:5px;
+  background:var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+  color:var(--muted);
+  flex-shrink:0;
+  transition:background .15s,color .15s;
+  font-family:'JetBrains Mono',monospace;
+}
+.opt.correct{background:rgba(74,222,128,.08);border-color:var(--green)}
+.opt.correct .opt-let{background:var(--green);color:#000}
+.opt.wrong{background:rgba(248,113,113,.08);border-color:var(--red)}
+.opt.wrong .opt-let{background:var(--red);color:#fff}
+.fb{
+  margin-top:.75rem;
+  padding:10px 13px;
+  border-radius:var(--r);
+  font-size:12.5px;
+  line-height:1.7;
+  display:none;
+  border-left:3px solid;
+}
+.fb.correct{background:rgba(74,222,128,.08);border-color:var(--green);color:#86efac}
+.fb.wrong{background:rgba(248,113,113,.08);border-color:var(--red);color:#fca5a5}
+.result-box{
+  display:none;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:2.5rem;
+  text-align:center;
+  margin-top:1rem;
+  position:relative;
+  overflow:hidden;
+}
+.result-box::before{
+  content:'';
+  position:absolute;
+  top:-60px;left:50%;transform:translateX(-50%);
+  width:300px;height:300px;
+  background:radial-gradient(circle,var(--glow-amber) 0%,transparent 70%);
+}
+.res-score{
+  font-size:3.5rem;
+  font-weight:700;
+  color:var(--amber);
+  line-height:1;
+  margin-bottom:.4rem;
+  font-family:'JetBrains Mono',monospace;
+  position:relative;
+}
+.res-msg{font-size:.9rem;color:var(--muted);font-style:italic;margin:.5rem 0 1.5rem;position:relative}
+.btn-retry{
+  background:transparent;
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.85rem;
+  font-weight:600;
+  padding:9px 22px;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  position:relative;
+}
+.btn-retry:hover{border-color:var(--amber);background:rgba(245,158,11,.06)}
+
+/* ── SAFETY GRID ── */
+.safety-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin:.75rem 0}
+.safety-item{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:.85rem;
+  font-size:12.5px;
+  line-height:1.6;
+}
+.safety-item strong{display:block;color:var(--orange);margin-bottom:3px;font-size:12px;letter-spacing:.03em}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── HISTORIAN TIMELINE ── */
+.timeline{position:relative;padding-left:1.5rem;margin:.75rem 0}
+.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:1rem;padding-left:.75rem}
+.tl-item::before{
+  content:'';
+  position:absolute;
+  left:-1.08rem;top:6px;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--amber);
+  border:2px solid var(--bg);
+}
+.tl-year{font-size:10px;font-weight:700;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-bottom:2px;letter-spacing:.06em}
+.tl-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.tl-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── GENERATION CARD ── */
+.gen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:.75rem 0}
+.gen-card{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1rem;
+}
+.gen-card-icon{font-size:1.5rem;margin-bottom:.4rem}
+.gen-card-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.gen-card-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── COLOR CODE ── */
+.color-band{display:inline-block;width:18px;height:18px;border-radius:3px;vertical-align:middle;margin-right:4px;border:1px solid rgba(255,255,255,.1)}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-logo">
+    <div class="logo-dot"></div>
+    SENAI · Eletrotécnica
+  </div>
+  <div class="nav-links">
+    <div class="nav-link active" onclick="goPage('home')">Início</div>
+    <div class="nav-link" onclick="goPage('topicos')">Conteúdo</div>
+    <div class="nav-link" onclick="goPage('quiz')">Quiz 40Q</div>
+    <div class="nav-link" onclick="goPage('calc')">Calculadoras</div>
+    <div class="nav-link" onclick="goPage('tabelas')">Referência</div>
+  </div>
+  <div class="nav-score">Acertos: <b id="global-score">0</b>/40</div>
+</nav>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-badge">📚 SENAI — Eletricidade Volume I</div>
+    <h1>Guia Interativo de<br>Fundamentos Elétricos</h1>
+    <p>Material baseado integralmente na apostila <strong>SENAI/DN — Eletricidade Volume I (2017)</strong>, Série Energia — Geração, Transmissão e Distribuição. Explore os módulos, use as calculadoras e avalie seus conhecimentos com <strong>40 questões</strong> de múltipla escolha.</p>
+    <div class="hero-grid">
+      <div class="hstat"><div class="hstat-val">12</div><div class="hstat-lbl">Módulos</div></div>
+      <div class="hstat"><div class="hstat-val">40</div><div class="hstat-lbl">Questões</div></div>
+      <div class="hstat"><div class="hstat-val">8</div><div class="hstat-lbl">Calculadoras</div></div>
+      <div class="hstat"><div class="hstat-val">7</div><div class="hstat-lbl">Capítulos</div></div>
+    </div>
+  </div>
+
+  <div class="topic-grid">
+    <div class="tcard" onclick="openModule('historico')">
+      <div class="tcard-icon">📜</div>
+      <div class="tcard-title">Histórico da Eletricidade</div>
+      <div class="tcard-sub">Tales de Mileto a Nikola Tesla — linha do tempo dos grandes descobridores</div>
+      <div class="tcard-tag">Cap. 6 · pág. 90</div>
+    </div>
+    <div class="tcard" onclick="openModule('atom')">
+      <div class="tcard-icon">⚛️</div>
+      <div class="tcard-title">Átomo e Carga Elétrica</div>
+      <div class="tcard-sub">Prótons, elétrons, nêutrons, eletrização por atrito, contato e indução</div>
+      <div class="tcard-tag">Cap. 6 · pág. 92</div>
+    </div>
+    <div class="tcard" onclick="openModule('coulomb')">
+      <div class="tcard-icon">⚡</div>
+      <div class="tcard-title">Lei de Coulomb e Campo Elétrico</div>
+      <div class="tcard-sub">Força elétrica, campo elétrico, potencial e DDP — com exemplos resolvidos</div>
+      <div class="tcard-tag">Cap. 6 · pág. 96</div>
+    </div>
+    <div class="tcard" onclick="openModule('geracao')">
+      <div class="tcard-icon">🏭</div>
+      <div class="tcard-title">Fontes Geradoras de Energia</div>
+      <div class="tcard-sub">Química, pressão, magnética, térmica, luminosa — usinas e distribuição</div>
+      <div class="tcard-tag">Cap. 6 · pág. 101</div>
+    </div>
+    <div class="tcard" onclick="openModule('grandezas')">
+      <div class="tcard-icon">📏</div>
+      <div class="tcard-title">Grandezas Fundamentais</div>
+      <div class="tcard-sub">Corrente (CC/CA), tensão elétrica, resistência, multímetro e instrumentos</div>
+      <div class="tcard-tag">Cap. 6 · pág. 111</div>
+    </div>
+    <div class="tcard" onclick="openModule('materiais')">
+      <div class="tcard-icon">🔩</div>
+      <div class="tcard-title">Materiais Elétricos</div>
+      <div class="tcard-sub">Condutores, isolantes, semicondutores — ouro, cobre, alumínio, borracha</div>
+      <div class="tcard-tag">Cap. 6 · pág. 117</div>
+    </div>
+    <div class="tcard" onclick="openModule('resistores')">
+      <div class="tcard-icon">🎨</div>
+      <div class="tcard-title">Resistores e Código de Cores</div>
+      <div class="tcard-sub">Código de cores, tolerância, resistores fixos, ajustáveis e variáveis</div>
+      <div class="tcard-tag">Cap. 7 · pág. 121</div>
+    </div>
+    <div class="tcard" onclick="openModule('circuitos')">
+      <div class="tcard-icon">🔗</div>
+      <div class="tcard-title">Circuitos Série, Paralelo e Misto</div>
+      <div class="tcard-sub">Resistência equivalente, divisores de tensão e corrente, exemplos resolvidos</div>
+      <div class="tcard-tag">Cap. 7 · pág. 128</div>
+    </div>
+    <div class="tcard" onclick="openModule('ohm')">
+      <div class="tcard-icon">🔢</div>
+      <div class="tcard-title">Leis de Ohm</div>
+      <div class="tcard-sub">1ª e 2ª Lei de Ohm — resistividade, condutor de cobre, cálculos completos</div>
+      <div class="tcard-tag">Cap. 8 · pág. 148</div>
+    </div>
+    <div class="tcard" onclick="openModule('kirchhoff')">
+      <div class="tcard-icon">🔀</div>
+      <div class="tcard-title">Leis de Kirchhoff</div>
+      <div class="tcard-sub">LKC (nós) e LKT (malhas) — exemplos numéricos extraídos da apostila</div>
+      <div class="tcard-tag">Cap. 8 · pág. 154</div>
+    </div>
+    <div class="tcard" onclick="openModule('matematica')">
+      <div class="tcard-icon">📐</div>
+      <div class="tcard-title">Matemática Aplicada</div>
+      <div class="tcard-sub">Frações, equações, notação científica, múltiplos/submúltiplos, geometria</div>
+      <div class="tcard-tag">Cap. 5 · pág. 44</div>
+    </div>
+    <div class="tcard" onclick="openModule('seguranca')">
+      <div class="tcard-icon">⚠️</div>
+      <div class="tcard-title">Segurança e Profissão</div>
+      <div class="tcard-sub">Comunicação, trabalho em equipe, ética profissional e segurança elétrica</div>
+      <div class="tcard-tag">Cap. 2-4</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TÓPICOS ═══════════════ -->
+<div id="page-topicos" class="page">
+
+  <!-- HISTÓRICO -->
+  <div id="mod-historico" class="module open">
+    <div class="mod-head">
+      <div class="mod-icon">📜</div>
+      <div>
+        <div class="mod-title">Histórico da Eletricidade</div>
+        <div class="mod-sub">Apostila SENAI/DN — Eletricidade Vol. I, pág. 90–91</div>
+      </div>
+    </div>
+    <p>O contato do homem com a eletricidade se deu de forma primitiva ainda na pré-história, desde os tempos mais antigos, há registro de tempestades e da manifestação da eletricidade através de <strong>raios (descargas atmosféricas)</strong>. A evolução é contada por estudiosos que dedicaram suas vidas ao tema:</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">SÉC. VI a.C.</div>
+        <div class="tl-name">Tales de Mileto</div>
+        <div class="tl-desc">Descobriu que o âmbar (resina vegetal), ao ser atritado, adquire a propriedade de atrair objetos leves — primeiro registro de eletrostática.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1660</div>
+        <div class="tl-name">Otto von Guericke</div>
+        <div class="tl-desc">Desenvolveu a primeira máquina eletrostática e descobriu o efeito de repulsão elétrica.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1752</div>
+        <div class="tl-name">Benjamin Franklin</div>
+        <div class="tl-desc">Empinou uma pipa durante uma tempestade obtendo efeitos elétricos na linha. Inventou o para-raios e criou os termos "eletricidade positiva" e "negativa".</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1800</div>
+        <div class="tl-name">Alessandro Volta</div>
+        <div class="tl-desc">Inventou a pilha elétrica — empilhou discos de cobre e zinco separados por flanela embebida em água salgada e ácido sulfúrico.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1820</div>
+        <div class="tl-name">Hans Christian Ørsted</div>
+        <div class="tl-desc">Constatou que uma corrente elétrica produz um campo magnético — início do estudo do eletromagnetismo.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1827</div>
+        <div class="tl-name">George Simon Ohm</div>
+        <div class="tl-desc">Demonstrou que a corrente em um circuito é diretamente proporcional à tensão e inversamente proporcional à resistência — a <b>Lei de Ohm</b>.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1895</div>
+        <div class="tl-name">Nikola Tesla e George Westinghouse</div>
+        <div class="tl-desc">Responsáveis pela primeira usina hidrelétrica nas cataratas do Niágara, gerando energia em corrente alternada alcançando mais de 300 km.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÁTOMO -->
+  <div id="mod-atom" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">⚛️</div>
+      <div>
+        <div class="mod-title">Átomo, Carga Elétrica e Eletrização</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 92–96</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('atom')">✕ fechar</button>
+    </div>
+    <p>A <strong>unidade fundamental da matéria é o átomo</strong>, composto por um núcleo (prótons positivos e nêutrons neutros) e elétrons negativos em órbita. O átomo em estado normal é <b>eletricamente neutro</b> — mesmo número de prótons e elétrons.</p>
+    <div class="two-col">
+      <div class="infobox amber"><b>Próton (p⁺)</b> — carga positiva, localizado no núcleo. Determina o número atômico do elemento.</div>
+      <div class="infobox blue"><b>Elétron (e⁻)</b> — carga negativa (–1,6×10⁻¹⁹ C), orbita o núcleo. Responsável pela condução elétrica.</div>
+    </div>
+    <div class="infobox teal"><b>Nêutron (n⁰)</b> — sem carga elétrica. Contribui para a massa e estabiliza o núcleo. Descoberto em 1932 por James Chadwick (35 anos após o elétron, descoberto em 1897 por J.J. Thomson).</div>
+    <div class="stitle">Eletrização dos Corpos</div>
+    <p>Quando um átomo ganha ou perde elétrons, torna-se um <strong>íon</strong>: <b>ânion</b> (negativo — ganhou elétrons) ou <b>cátion</b> (positivo — perdeu elétrons). Os processos de eletrização são:</p>
+    <div class="safety-grid">
+      <div class="safety-item"><strong>⚡ Por Atrito</strong> Dois isolantes são atritados. Um perde elétrons (fica +) e o outro ganha (fica –). Ex: vidro × lã.</div>
+      <div class="safety-item"><strong>🤝 Por Contato</strong> Condutor carregado toca um neutro. Ambos ficam com a mesma carga do original. Se iguais volumes: média aritmética.</div>
+      <div class="safety-item"><strong>🔄 Por Indução</strong> Sem contato. O indutor polariza o induzido, segue-se aterramento e afastamento. O induzido fica com carga oposta ao indutor.</div>
+    </div>
+    <div class="infobox amber"><b>Forças elétricas:</b> Cargas de mesmo sinal se repelem; cargas de sinais opostos se atraem. Quanto maior a distância entre as cargas, menor a força.</div>
+  </div>
+
+  <!-- COULOMB -->
+  <div id="mod-coulomb" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">⚡</div>
+      <div>
+        <div class="mod-title">Lei de Coulomb, Campo e Potencial Elétrico</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 96–101</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('coulomb')">✕ fechar</button>
+    </div>
+    <p>A <strong>Lei de Coulomb</strong>, formulada pelo físico francês Charles Augustin de Coulomb, calcula a força elétrica entre partículas carregadas, levando em conta: intensidade das cargas, meio e distância.</p>
+    <div class="formula-box">F = K · |Q₁| · |Q₂| / d²<small>F = força em Newtons | K = constante eletrostática | Q = carga em Coulombs | d = distância em metros</small></div>
+    <table class="eltable">
+      <tr><th>Material</th><th>Constante K (N·m²/C²)</th></tr>
+      <tr><td>Vácuo / Ar seco</td><td>9 × 10⁹</td></tr>
+      <tr><td>Benzeno</td><td>2,3 × 10⁹</td></tr>
+      <tr><td>Petróleo</td><td>3,6 × 10⁹</td></tr>
+      <tr><td>Água</td><td>0,11 × 10⁹</td></tr>
+    </table>
+    <div class="stitle">Campo Elétrico</div>
+    <div class="formula-box">E = K · |Q| / d²<small>E = intensidade do campo em N/C (nunca negativa, pois usamos valor absoluto)</small></div>
+    <div class="infobox blue"><b>Linhas de campo:</b> De carga positiva, as linhas de força são <b>divergentes</b> (saem da carga). De carga negativa, são <b>convergentes</b> (entram na carga).</div>
+    <div class="stitle">DDP — Diferença de Potencial</div>
+    <p>A <strong>DDP (tensão elétrica / FEM)</strong> é a força que impulsiona os elétrons, fazendo-os mover em um condutor. Na pilha: polo positivo tem falta de elétrons e polo negativo tem excesso — ao ligar ao circuito, os elétrons fluem do polo negativo ao positivo.</p>
+    <div class="infobox amber"><b>Sentido convencional da corrente:</b> do polo + para o polo – (definido historicamente). O sentido real dos elétrons é do polo – para o polo +.</div>
+  </div>
+
+  <!-- GERAÇÃO -->
+  <div id="mod-geracao" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🏭</div>
+      <div>
+        <div class="mod-title">Fontes Geradoras de Energia Elétrica</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 101–110</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('geracao')">✕ fechar</button>
+    </div>
+    <p><strong>"Na natureza nada se cria, nada se perde, tudo se transforma"</strong> — lei da conservação da energia. O que chamamos de geração é, na verdade, a <b>conversão</b> de outros tipos de energia em energia elétrica.</p>
+    <div class="gen-grid">
+      <div class="gen-card"><div class="gen-card-icon">🔋</div><div class="gen-card-title">Ação Química</div><div class="gen-card-desc">Reação química na pilha/bateria. Dois metais em solução: um tem excesso de e⁻ (polo –) e o outro falta (polo +). Ex: pilhas e baterias.</div></div>
+      <div class="gen-card"><div class="gen-card-icon">💎</div><div class="gen-card-title">Ação de Pressão / Mecânica</div><div class="gen-card-desc">Cristais piezoelétricos (quartzo, mica) submetidos à pressão geram tensão. Aplicação: lombadas geradoras de energia.</div></div>
+      <div class="gen-card"><div class="gen-card-icon">🧲</div><div class="gen-card-title">Ação Magnética</div><div class="gen-card-desc">Princípio de Faraday: bobina em campo magnético produz tensão. Base dos geradores de usinas hidrelétricas e eólicas.</div></div>
+      <div class="gen-card"><div class="gen-card-icon">🌡️</div><div class="gen-card-title">Ação Térmica</div><div class="gen-card-desc">Par termoelétrico aquecido gera DDP. O aumento de temperatura acelera e⁻ livres. Aplicação: sensores de temperatura.</div></div>
+      <div class="gen-card"><div class="gen-card-icon">☀️</div><div class="gen-card-title">Ação Luminosa</div><div class="gen-card-desc">Efeito fotoelétrico: luz incide em célula fotovoltaica (silício), elétrons se deslocam gerando corrente. Painéis solares.</div></div>
+    </div>
+    <div class="stitle">Usinas Geradoras (Brasil — 2016, ANEEL)</div>
+    <table class="eltable">
+      <tr><th>Usina</th><th>Participação</th><th>Princípio</th></tr>
+      <tr><td><b>Hidrelétricas</b></td><td><span class="badge blue">&gt; 60%</span></td><td>Energia cinética da água → turbina → gerador</td></tr>
+      <tr><td><b>Termoelétricas</b></td><td><span class="badge amber">&gt; 27%</span></td><td>Combustível → vapor → turbina → gerador</td></tr>
+      <tr><td><b>Eólicas</b></td><td><span class="badge green">&gt; 6%</span></td><td>Vento → aerogerador → gerador</td></tr>
+      <tr><td><b>Nuclear + Solar</b></td><td><span class="badge red">&lt; 2%</span></td><td>Fissão nuclear / efeito fotoelétrico</td></tr>
+    </table>
+    <div class="infobox blue"><b>Distribuição:</b> Geração → Transmissão (transformador elevador) → Subestação distribuidora → Consumidores (380/220 V residencial, tensão maior para indústrias).</div>
+  </div>
+
+  <!-- GRANDEZAS -->
+  <div id="mod-grandezas" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">📏</div>
+      <div>
+        <div class="mod-title">Grandezas Fundamentais da Eletrodinâmica</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 111–117</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('grandezas')">✕ fechar</button>
+    </div>
+    <p>Um <strong>circuito elétrico</strong> é um conjunto de condutores, interruptores, cabos/fios, cargas (lâmpada, motor, etc.) e uma fonte geradora, formando um <b>caminho fechado</b> para a corrente elétrica.</p>
+    <table class="eltable">
+      <tr><th>Grandeza</th><th>Símbolo</th><th>Unidade</th><th>Instrumento</th></tr>
+      <tr><td>Corrente elétrica</td><td>I</td><td>Ampère (A)</td><td>Amperímetro</td></tr>
+      <tr><td>Tensão (DDP)</td><td>V ou E</td><td>Volt (V)</td><td>Voltímetro</td></tr>
+      <tr><td>Resistência</td><td>R</td><td>Ohm (Ω)</td><td>Ohmímetro</td></tr>
+      <tr><td>Potência</td><td>P</td><td>Watt (W)</td><td>Wattímetro</td></tr>
+    </table>
+    <div class="stitle">Corrente Contínua (CC) vs Corrente Alternada (CA)</div>
+    <div class="two-col">
+      <div class="infobox amber"><b>CC / DC</b> — sentido único e constante. Produzida por pilhas, baterias. Pode ser constante ou pulsante. Símbolo no medidor: traço (–).</div>
+      <div class="infobox blue"><b>CA / AC</b> — oscila e muda de sentido conforme a frequência (ciclos/segundo). Segue a função seno. No Brasil: 60 Hz. Símbolo no medidor: til (~).</div>
+    </div>
+    <div class="infobox teal"><b>Multímetro:</b> Concentra em um aparelho: voltímetro, amperímetro, ohmímetro, frequencímetro. Ao medir, sempre escolha uma escala <b>maior</b> que o valor esperado. Tentar medir um valor maior que a escala pode danificar o aparelho.</div>
+    <div class="infobox red"><b>Curiosidade:</b> O nome da banda AC/DC significa "Alternating Current / Direct Current" (Corrente Alternada / Corrente Contínua), inspirado em uma placa na máquina de costura da irmã dos membros da banda.</div>
+  </div>
+
+  <!-- MATERIAIS -->
+  <div id="mod-materiais" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🔩</div>
+      <div>
+        <div class="mod-title">Materiais Elétricos — Condutores e Isolantes</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 117–119</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('materiais')">✕ fechar</button>
+    </div>
+    <table class="eltable">
+      <tr><th>Material</th><th>Classificação</th><th>Aplicação</th></tr>
+      <tr><td>Ouro, Prata</td><td><span class="badge green">Condutor</span></td><td>Circuitos eletrônicos, conectores de precisão</td></tr>
+      <tr><td>Cobre</td><td><span class="badge green">Condutor</span></td><td>Fios e cabos elétricos residenciais/industriais</td></tr>
+      <tr><td>Alumínio</td><td><span class="badge green">Condutor</span></td><td>Cabos com alma (rede de distribuição)</td></tr>
+      <tr><td>Plástico, Borracha</td><td><span class="badge red">Isolante</span></td><td>Camada protetora de cabos elétricos</td></tr>
+      <tr><td>Porcelana</td><td><span class="badge red">Isolante</span></td><td>Isoladores elétricos em redes de distribuição</td></tr>
+      <tr><td>Madeira seca</td><td><span class="badge red">Isolante</span></td><td>Antigamente: bastões de manobra (substituídos por fibra de vidro)</td></tr>
+      <tr><td>Ar seco</td><td><span class="badge red">Isolante</span></td><td>Isolamento natural</td></tr>
+    </table>
+    <div class="infobox amber"><b>Atenção:</b> A madeira absorve umidade, o que compromete sua isolação. Por isso, bastões de manobra modernos são feitos de <b>fibra de vidro</b>. Sempre verifique a integridade de EPIs isolantes — mesmo um pequeno furo pode colocar vidas em risco.</div>
+  </div>
+
+  <!-- RESISTORES -->
+  <div id="mod-resistores" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🎨</div>
+      <div>
+        <div class="mod-title">Resistores e Código de Cores</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 121–127</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('resistores')">✕ fechar</button>
+    </div>
+    <p>O <strong>resistor</strong> é um dispositivo que converte energia elétrica em térmica (<b>efeito Joule</b>), divide tensão e/ou limita corrente. <i>Diferença: resistor é o dispositivo físico; resistência é a propriedade do material.</i></p>
+    <div class="stitle">Código de Cores — 4 faixas</div>
+    <table class="eltable">
+      <tr><th>Cor</th><th>1ª faixa</th><th>2ª faixa</th><th>3ª faixa</th><th>Multiplicador</th><th>Tolerância</th></tr>
+      <tr><td><span class="color-band" style="background:#000"></span>Preto</td><td>0</td><td>0</td><td>0</td><td>×1 Ω</td><td>—</td></tr>
+      <tr><td><span class="color-band" style="background:#6b2d0a"></span>Marrom</td><td>1</td><td>1</td><td>1</td><td>×10 Ω</td><td>±1%</td></tr>
+      <tr><td><span class="color-band" style="background:#c00"></span>Vermelho</td><td>2</td><td>2</td><td>2</td><td>×100 Ω</td><td>±2%</td></tr>
+      <tr><td><span class="color-band" style="background:#f80"></span>Laranja</td><td>3</td><td>3</td><td>3</td><td>×1 kΩ</td><td>—</td></tr>
+      <tr><td><span class="color-band" style="background:#ff0"></span>Amarelo</td><td>4</td><td>4</td><td>4</td><td>×10 kΩ</td><td>—</td></tr>
+      <tr><td><span class="color-band" style="background:#080"></span>Verde</td><td>5</td><td>5</td><td>5</td><td>×100 kΩ</td><td>±0,5%</td></tr>
+      <tr><td><span class="color-band" style="background:#00a"></span>Azul</td><td>6</td><td>6</td><td>6</td><td>×1 MΩ</td><td>±0,25%</td></tr>
+      <tr><td><span class="color-band" style="background:#808"></span>Violeta</td><td>7</td><td>7</td><td>7</td><td>×10 MΩ</td><td>±0,1%</td></tr>
+      <tr><td><span class="color-band" style="background:#888"></span>Cinza</td><td>8</td><td>8</td><td>8</td><td>—</td><td>±0,05%</td></tr>
+      <tr><td><span class="color-band" style="background:#fff"></span>Branco</td><td>9</td><td>9</td><td>9</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="color-band" style="background:#d4af37"></span>Dourado</td><td>—</td><td>—</td><td>—</td><td>×0,1 Ω</td><td>±5%</td></tr>
+      <tr><td><span class="color-band" style="background:#c0c0c0"></span>Prateado</td><td>—</td><td>—</td><td>—</td><td>×0,01 Ω</td><td>±10%</td></tr>
+    </table>
+    <div class="infobox amber"><b>Exemplo da apostila:</b> Resistor Amarelo–Violeta–Vermelho–Dourado = 4–7–×100–±5% = <b>4.700 Ω ±5%</b> (de 4.465 Ω a 4.935 Ω).</div>
+    <div class="stitle">Tipos de Resistores</div>
+    <div class="safety-grid">
+      <div class="safety-item"><strong>🔒 Resistor Fixo</strong>Valor constante (dentro da tolerância). Leitura pelo código de cores. Tamanho maior = maior potência de dissipação.</div>
+      <div class="safety-item"><strong>🔧 Resistor Ajustável (Trimpot)</strong>Ajuste interno com chave Philips. Usado para calibração de medidores. Não acessível ao usuário final.</div>
+      <div class="safety-item"><strong>🎛️ Resistor Variável (Potenciômetro)</strong>Botão giratório acessível. Aplicado em controle de velocidade de motores e em fontes de tensão variáveis.</div>
+    </div>
+  </div>
+
+  <!-- CIRCUITOS -->
+  <div id="mod-circuitos" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🔗</div>
+      <div>
+        <div class="mod-title">Circuitos Série, Paralelo e Misto</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 128–144</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('circuitos')">✕ fechar</button>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="stitle">Circuito em Série</div>
+        <p><b>Um único caminho</b> para a corrente. Divisor de tensão. Se um elemento falhar, o circuito inteiro para.</p>
+        <div class="formula-box">Req = R1 + R2 + R3 + ... + Rn<small>Corrente igual em todos os pontos. Tensão divide proporcionalmente à resistência.</small></div>
+      </div>
+      <div>
+        <div class="stitle">Circuito em Paralelo</div>
+        <p><b>Múltiplos caminhos</b> para a corrente. Divisor de corrente. Cada ramo é independente.</p>
+        <div class="formula-box">1/Req = 1/R1 + 1/R2 + ... + 1/Rn<small>Tensão igual em todos os ramos. Corrente divide-se inversamente à resistência.</small></div>
+      </div>
+    </div>
+    <div class="infobox amber"><b>Método prático (2 resistores):</b> Req = R1×R2 / (R1+R2). &nbsp;&nbsp; <b>Resistores iguais:</b> Req = R/n (divide pelo número de resistores iguais).</div>
+    <div class="stitle">Circuito Misto</div>
+    <p>Combina trechos em série e em paralelo. <b>Estratégia:</b> começar pelo ponto mais distante da fonte, associar dois resistores por vez até obter um único Req.</p>
+    <div class="infobox blue"><b>Exemplo da apostila (pág. 140):</b> R1=8Ω + R2=7Ω em série → RA=15Ω. RA em paralelo com R3=15Ω → Req = 15/2 = <b>7,5 Ω</b> (dois iguais).</div>
+  </div>
+
+  <!-- OHM -->
+  <div id="mod-ohm" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🔢</div>
+      <div>
+        <div class="mod-title">1ª e 2ª Lei de Ohm</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 148–154 · Georg Simon Ohm (1827)</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('ohm')">✕ fechar</button>
+    </div>
+    <div class="stitle">1ª Lei de Ohm</div>
+    <p><strong>A corrente num circuito é diretamente proporcional à tensão e inversamente proporcional à resistência.</strong></p>
+    <div class="formula-box">V = R × I &nbsp;|&nbsp; I = V / R &nbsp;|&nbsp; R = V / I<small>V = Volt · I = Ampère · R = Ohm</small></div>
+    <div class="infobox amber"><b>Triângulo mnemônico:</b> Cubra a incógnita — o restante revela a fórmula. Cubra V → R×I; cubra I → V/R; cubra R → V/I.</div>
+    <div class="stitle">2ª Lei de Ohm — Resistividade do Condutor</div>
+    <div class="formula-box">R = ρ × L / S<small>ρ = resistividade (Ω·mm²/m) · L = comprimento (m) · S = seção transversal (mm²)</small></div>
+    <table class="eltable">
+      <tr><th>Material</th><th>ρ (Ω·mm²/m) a 20°C</th></tr>
+      <tr><td>Prata</td><td>0,0158</td></tr>
+      <tr><td>Cobre</td><td>0,0173</td></tr>
+      <tr><td>Alumínio</td><td>0,0278</td></tr>
+      <tr><td>Ferro</td><td>0,121</td></tr>
+      <tr><td>Nicromo (Ni-Cr)</td><td>1,1</td></tr>
+    </table>
+    <div class="infobox blue"><b>Exemplo da apostila (pág. 153):</b> Fio de cobre, S=1,5mm², L=50m, ρ=0,0173. R = 0,0173 × 50/1,5 = <b>0,58 Ω</b>. Com I=7,5A → queda de tensão = 0,58 × 7,5 = <b>4,35 V</b>.</div>
+    <div class="calc-box">
+      <div class="calc-title">⚡ Calculadora 1ª Lei de Ohm</div>
+      <div class="calc-row"><label>Tensão (V)</label><input type="number" id="ohm-v" placeholder="ex: 220"><span class="unit">Volts</span></div>
+      <div class="calc-row"><label>Corrente (A)</label><input type="number" id="ohm-i" placeholder="ex: 5"><span class="unit">Ampères</span></div>
+      <div class="calc-row"><label>Resistência</label><input type="number" id="ohm-r" placeholder="ex: 44"><span class="unit">Ohms</span></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcOhm()">Calcular incógnita</button></div>
+      <div class="calc-result" id="ohm-res" style="display:none">—</div>
+    </div>
+  </div>
+
+  <!-- KIRCHHOFF -->
+  <div id="mod-kirchhoff" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">🔀</div>
+      <div>
+        <div class="mod-title">Leis de Kirchhoff</div>
+        <div class="mod-sub">Apostila SENAI/DN — pág. 154–157 · Gustav Robert Kirchhoff</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('kirchhoff')">✕ fechar</button>
+    </div>
+    <div class="stitle">1ª Lei — LKC (Lei dos Nós)</div>
+    <p><strong>A soma das correntes que entram em um nó é igual à soma das correntes que saem.</strong></p>
+    <div class="formula-box">Σ I_entrada = Σ I_saída<small>Ex. da apostila: Ia=0,48A + Ib=0,96A = It=1,44A</small></div>
+    <div class="infobox blue"><b>Conclusão em circuito paralelo:</b> A corrente se divide, passando maior parcela pelo ramo de <b>menor resistência</b>. No exemplo: R4=10Ω e R2=5Ω → Ib é o dobro de Ia.</div>
+    <div class="stitle">2ª Lei — LKT (Lei das Malhas)</div>
+    <p><strong>O somatório das tensões em uma malha fechada é igual a zero</strong> — a soma das quedas de tensão nos consumidores é igual à tensão da fonte.</p>
+    <div class="formula-box">Vfonte = VR1 + VR2 + VR3 + ...<small>Ex. da apostila: 12V = 2,4V + 6V + 3,6V (circuito série com R1=2kΩ, R2=5kΩ, R3=3kΩ)</small></div>
+    <div class="two-col">
+      <div class="infobox amber"><b>Série:</b> Corrente = igual em todos os pontos. Tensão divide-se proporcionalmente à resistência.</div>
+      <div class="infobox teal"><b>Paralelo:</b> Tensão = igual em todos os ramos. Corrente divide-se inversamente à resistência.</div>
+    </div>
+  </div>
+
+  <!-- MATEMÁTICA -->
+  <div id="mod-matematica" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">📐</div>
+      <div>
+        <div class="mod-title">Matemática Aplicada à Eletrotécnica</div>
+        <div class="mod-sub">Apostila SENAI/DN — Cap. 5 · pág. 44–88</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('matematica')">✕ fechar</button>
+    </div>
+    <div class="stitle">Múltiplos e Submúltiplos</div>
+    <table class="eltable">
+      <tr><th>Prefixo</th><th>Símbolo</th><th>Fator</th><th>Exemplo elétrico</th></tr>
+      <tr><td>Giga</td><td>G</td><td>10⁹</td><td>1 GΩ = 10⁹ Ω</td></tr>
+      <tr><td>Mega</td><td>M</td><td>10⁶</td><td>1 MΩ = 1.000.000 Ω</td></tr>
+      <tr><td>Quilo</td><td>k</td><td>10³</td><td>1 kV = 1.000 V</td></tr>
+      <tr><td>— (base)</td><td>—</td><td>10⁰</td><td>1 A, 1 V, 1 Ω</td></tr>
+      <tr><td>Mili</td><td>m</td><td>10⁻³</td><td>1 mA = 0,001 A</td></tr>
+      <tr><td>Micro</td><td>µ</td><td>10⁻⁶</td><td>1 µC = 10⁻⁶ C</td></tr>
+      <tr><td>Nano</td><td>n</td><td>10⁻⁹</td><td>1 nF = 10⁻⁹ F</td></tr>
+      <tr><td>Pico</td><td>p</td><td>10⁻¹²</td><td>1 pA = 10⁻¹² A</td></tr>
+    </table>
+    <div class="stitle">Notação Científica</div>
+    <p>Permite representar números muito grandes ou muito pequenos. Formato: coeficiente (entre 1 e 10) × potência de 10.</p>
+    <div class="formula-box">78245,238 = 7,82 × 10⁴ &nbsp;&nbsp;|&nbsp;&nbsp; 0,0000478 = 4,78 × 10⁻⁵</div>
+    <div class="stitle">Equações de 1º Grau</div>
+    <p><b>Método:</b> isolar a incógnita — quem muda de lado da igualdade inverte a operação (+↔–, ×↔÷).</p>
+    <div class="stitle">Fórmula de Bhaskara (2º grau)</div>
+    <div class="formula-box">x = (−b ± √(b² − 4ac)) / 2a<small>Δ = b² − 4ac. Se Δ&gt;0: duas raízes reais | Δ=0: raiz dupla | Δ&lt;0: raízes complexas</small></div>
+    <div class="infobox amber"><b>Curiosidade:</b> A "fórmula de Bhaskara" é chamada assim apenas no Brasil! Em outros países tem outros nomes.</div>
+  </div>
+
+  <!-- SEGURANÇA -->
+  <div id="mod-seguranca" class="module">
+    <div class="mod-head">
+      <div class="mod-icon">⚠️</div>
+      <div>
+        <div class="mod-title">Comunicação, Ética e Segurança</div>
+        <div class="mod-sub">Apostila SENAI/DN — Caps. 2, 3 e 4 · pág. 19–41</div>
+      </div>
+      <button class="btn-close" onclick="closeModule('seguranca')">✕ fechar</button>
+    </div>
+    <p>A <strong>comunicação no setor elétrico</strong> é crítica para a segurança. A supressão ou não compreensão de uma informação pode <b>colocar vidas em risco</b> — ex.: equipes de manutenção precisam comunicar o início e a conclusão dos trabalhos para evitar o religamento acidental de máquinas.</p>
+    <div class="stitle">Processo de Comunicação</div>
+    <div class="safety-grid">
+      <div class="safety-item"><strong>📤 Emissor</strong>Quem envia a mensagem. Deve escolher palavras claras e entonação correta.</div>
+      <div class="safety-item"><strong>💬 Mensagem</strong>Intenção pode ser: informar, alertar, questionar ou instigar.</div>
+      <div class="safety-item"><strong>📥 Receptor</strong>Quem recebe. Deve ouvir com atenção e confirmar o recebimento.</div>
+      <div class="safety-item"><strong>✅ Confirmação</strong>Feedback que garante que a mensagem foi compreendida corretamente.</div>
+    </div>
+    <div class="stitle">Trabalho em Equipe e Ética</div>
+    <p><b>"Sozinho chego mais rápido, mas juntos iremos mais longe."</b> No setor elétrico, o trabalho em dupla é norma de segurança — um atua como supervisor do outro, evitando decisões precipitadas.</p>
+    <div class="infobox amber"><b>Informação vs. Dado:</b> Dados são informações brutas não tratadas. A informação surge após seleção, sistematização e organização dos dados. Para apresentar bem, escolha tabelas, gráficos ou listas de acordo com o público-alvo.</div>
+  </div>
+
+</div><!-- end page-topicos -->
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<div id="page-quiz" class="page">
+  <div class="quiz-hero">
+    <div class="quiz-hero-label">📋 Avaliação Completa</div>
+    <div class="quiz-hero-title">40 Questões — Eletricidade Volume I</div>
+    <div class="quiz-hero-sub">Baseado integralmente na apostila SENAI/DN · Eletricidade Vol. I (2017)</div>
+  </div>
+  <div class="scorebar">
+    <span id="qctr">Questão 1 de 40</span>
+    <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
+    <span>Acertos: <span class="sval" id="sval">0</span></span>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div id="qbody"></div>
+  <div class="result-box" id="resultbox">
+    <div class="res-score" id="rscore"></div>
+    <div class="res-msg" id="rmsg"></div>
+    <button class="btn-retry" onclick="restartQuiz()">↺ Tentar novamente</button>
+  </div>
+  <div style="text-align:center;font-size:12px;color:var(--dim);margin-top:.75rem" id="qhint">Selecione uma alternativa para avançar automaticamente</div>
+</div>
+
+<!-- ═══════════════ CALCULADORAS ═══════════════ -->
+<div id="page-calc" class="page">
+  <div style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;letter-spacing:-.02em">⚡ Calculadoras Elétricas</div>
+  <div class="topic-grid">
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">🔢 Lei de Ohm (V, I, R)</div>
+      <div class="calc-row"><label>Tensão (V)</label><input type="number" id="c-v" placeholder="220"></div>
+      <div class="calc-row"><label>Corrente (A)</label><input type="number" id="c-i" placeholder="5"></div>
+      <div class="calc-row"><label>Resistência (Ω)</label><input type="number" id="c-r" placeholder="44"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcOhm2()">Calcular</button></div>
+      <div class="calc-result" id="c-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">⚡ Potência Elétrica</div>
+      <div class="calc-row"><label>Tensão (V)</label><input type="number" id="p-v" placeholder="220"></div>
+      <div class="calc-row"><label>Corrente (A)</label><input type="number" id="p-i" placeholder="5"></div>
+      <div class="calc-row"><label>Resistência (Ω)</label><input type="number" id="p-r" placeholder=""></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcP()">Calcular P</button></div>
+      <div class="calc-result" id="p-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">➕ Resistores em Série</div>
+      <div class="calc-row"><label>R1 (Ω)</label><input type="number" id="s1" placeholder="10"></div>
+      <div class="calc-row"><label>R2 (Ω)</label><input type="number" id="s2" placeholder="20"></div>
+      <div class="calc-row"><label>R3 (Ω)</label><input type="number" id="s3" placeholder="30"></div>
+      <div class="calc-row"><label>R4 (Ω)</label><input type="number" id="s4" placeholder="(opcional)"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcSerie2()">RT Série</button></div>
+      <div class="calc-result" id="s-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">🔀 Resistores em Paralelo</div>
+      <div class="calc-row"><label>R1 (Ω)</label><input type="number" id="pa1" placeholder="12"></div>
+      <div class="calc-row"><label>R2 (Ω)</label><input type="number" id="pa2" placeholder="6"></div>
+      <div class="calc-row"><label>R3 (Ω)</label><input type="number" id="pa3" placeholder="(opcional)"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcPar2()">RT Paralelo</button></div>
+      <div class="calc-result" id="pa-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">🌡️ 2ª Lei de Ohm (cabo)</div>
+      <div class="calc-row"><label>ρ (Ω·mm²/m)</label><input type="number" id="rho" placeholder="0.0173"></div>
+      <div class="calc-row"><label>Comprimento (m)</label><input type="number" id="comp" placeholder="50"></div>
+      <div class="calc-row"><label>Seção (mm²)</label><input type="number" id="sec" placeholder="1.5"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calc2aOhm()">Calcular R</button></div>
+      <div class="calc-result" id="r2-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">⚗️ Lei de Coulomb</div>
+      <div class="calc-row"><label>Q1 (µC)</label><input type="number" id="coul-q1" placeholder="7.5"></div>
+      <div class="calc-row"><label>Q2 (µC)</label><input type="number" id="coul-q2" placeholder="9"></div>
+      <div class="calc-row"><label>Distância (cm)</label><input type="number" id="coul-d" placeholder="75"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcCoulomb()">Calcular F</button></div>
+      <div class="calc-result" id="coul-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">🔥 Efeito Joule (Calor)</div>
+      <div class="calc-row"><label>Corrente (A)</label><input type="number" id="j-i" placeholder="20"></div>
+      <div class="calc-row"><label>Resistência (Ω)</label><input type="number" id="j-r" placeholder="0.5"></div>
+      <div class="calc-row"><label>Tempo (s)</label><input type="number" id="j-t" placeholder="60"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcJoule()">Calcular P e Q</button></div>
+      <div class="calc-result" id="j-res" style="display:none">—</div>
+    </div>
+
+    <div class="calc-box" style="background:var(--card)">
+      <div class="calc-title">🔵 LKC — Nó de Kirchhoff</div>
+      <div class="calc-row"><label>Ia (A)</label><input type="number" id="i1" placeholder="0.48"></div>
+      <div class="calc-row"><label>Ib (A)</label><input type="number" id="i2" placeholder="0.96"></div>
+      <div class="calc-row"><label>Ic (A)</label><input type="number" id="i3" placeholder="(opcional)"></div>
+      <div class="calc-row"><button class="btn-calc" onclick="calcNo()">It = Ia+Ib+Ic</button></div>
+      <div class="calc-result" id="no-res" style="display:none">—</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ TABELAS ═══════════════ -->
+<div id="page-tabelas" class="page">
+  <div style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;letter-spacing:-.02em">📚 Tabelas de Referência</div>
+
+  <div class="stitle">Múltiplos e Submúltiplos (Apostila pág. 72)</div>
+  <table class="eltable">
+    <tr><th>Prefixo</th><th>Símbolo</th><th>Fator</th><th>Exemplo</th></tr>
+    <tr><td>Giga</td><td>G</td><td>10⁹</td><td>1 GΩ = 1.000.000.000 Ω</td></tr>
+    <tr><td>Mega</td><td>M</td><td>10⁶</td><td>1 MΩ = 1.000.000 Ω</td></tr>
+    <tr><td>Quilo</td><td>k</td><td>10³</td><td>1 kV = 1.000 V</td></tr>
+    <tr><td>Mili</td><td>m</td><td>10⁻³</td><td>1 mA = 0,001 A</td></tr>
+    <tr><td>Micro</td><td>µ</td><td>10⁻⁶</td><td>1 µF = 0,000001 F</td></tr>
+    <tr><td>Nano</td><td>n</td><td>10⁻⁹</td><td>1 nF = 10⁻⁹ F</td></tr>
+    <tr><td>Pico</td><td>p</td><td>10⁻¹²</td><td>1 pC = 10⁻¹² C</td></tr>
+  </table>
+
+  <div class="stitle">Resistividade dos Materiais (Apostila pág. 152)</div>
+  <table class="eltable">
+    <tr><th>Material</th><th>ρ (Ω·mm²/m) a 20°C</th><th>Aplicação</th></tr>
+    <tr><td>Prata</td><td>0,0158</td><td>Conectores de alta precisão</td></tr>
+    <tr><td>Cobre</td><td>0,0173</td><td>Fios e cabos elétricos</td></tr>
+    <tr><td>Ouro</td><td>0,0240</td><td>Circuitos eletrônicos</td></tr>
+    <tr><td>Alumínio</td><td>0,0278</td><td>Linhas de transmissão</td></tr>
+    <tr><td>Tungstênio</td><td>0,0500</td><td>Filamentos</td></tr>
+    <tr><td>Níquel</td><td>0,0780</td><td>—</td></tr>
+    <tr><td>Ferro</td><td>0,1210</td><td>Núcleos magnéticos</td></tr>
+    <tr><td>Platina</td><td>0,1060</td><td>Sensores de temperatura</td></tr>
+    <tr><td>Constantan/Manganina</td><td>0,48–0,50</td><td>Resistores (resistência estável com temperatura)</td></tr>
+    <tr><td>Nicromo (Ni-Cr)</td><td>1,10</td><td>Resistências de chuveiro, fornos</td></tr>
+  </table>
+
+  <div class="stitle">Constante Eletrostática K — Lei de Coulomb (Apostila pág. 97)</div>
+  <table class="eltable">
+    <tr><th>Meio</th><th>K (N·m²/C²)</th></tr>
+    <tr><td>Vácuo / Ar seco</td><td>9 × 10⁹</td></tr>
+    <tr><td>Benzeno</td><td>2,3 × 10⁹</td></tr>
+    <tr><td>Petróleo</td><td>3,6 × 10⁹</td></tr>
+    <tr><td>Água</td><td>0,11 × 10⁹</td></tr>
+  </table>
+
+  <div class="stitle">Simbologia de Circuitos (norma IEC 60617)</div>
+  <table class="eltable">
+    <tr><th>Componente</th><th>Símbolo (descrição)</th></tr>
+    <tr><td>Resistor fixo (IEC/ABNT)</td><td>Retângulo</td></tr>
+    <tr><td>Resistor fixo (IEEE/ANSI)</td><td>Ziguezague</td></tr>
+    <tr><td>Potenciômetro</td><td>Retângulo com seta diagonal</td></tr>
+    <tr><td>Fonte de tensão CC</td><td>Círculo com + e –; linhas longa/curta</td></tr>
+    <tr><td>Chave aberta (NA)</td><td>Linha com abertura</td></tr>
+    <tr><td>Aterramento</td><td>Pirâmide de linhas horizontais</td></tr>
+    <tr><td>Amperímetro</td><td>Círculo com letra A</td></tr>
+    <tr><td>Voltímetro</td><td>Círculo com letra V</td></tr>
+  </table>
+</div>
+
+<script>
+// ── NAVIGATION ──
+var pages=['home','topicos','quiz','calc','tabelas'];
+function goPage(id){
+  pages.forEach(function(p){
+    var el=document.getElementById('page-'+p);
+    if(el) el.classList.toggle('active',p===id);
+  });
+  document.querySelectorAll('.nav-link').forEach(function(l,i){
+    l.classList.toggle('active',pages[i]===id);
+  });
+  if(id==='topicos'){
+    document.querySelectorAll('.module').forEach(function(m){m.classList.remove('open')});
+    document.getElementById('mod-historico').classList.add('open');
+  }
+  window.scrollTo(0,0);
+}
+function openModule(id){
+  goPage('topicos');
+  document.querySelectorAll('.module').forEach(function(m){m.classList.remove('open')});
+  var m=document.getElementById('mod-'+id);
+  if(m){m.classList.add('open');setTimeout(function(){m.scrollIntoView({behavior:'smooth',block:'start'})},100);}
+}
+function closeModule(id){
+  var m=document.getElementById('mod-'+id);
+  if(m) m.classList.remove('open');
+}
+
+// ── CALCULATORS ──
+function show(id,val){
+  var el=document.getElementById(id);
+  el.style.display='flex';
+  el.innerHTML=val;
+}
+function round3(v){return Math.round(v*1000)/1000;}
+function calcOhm(){
+  var v=parseFloat(document.getElementById('ohm-v').value);
+  var i=parseFloat(document.getElementById('ohm-i').value);
+  var r=parseFloat(document.getElementById('ohm-r').value);
+  if(!isNaN(v)&&!isNaN(i)&&isNaN(r)) show('ohm-res','R = '+round3(v/i)+' Ω <span>V/I</span>');
+  else if(!isNaN(v)&&isNaN(i)&&!isNaN(r)) show('ohm-res','I = '+round3(v/r)+' A <span>V/R</span>');
+  else if(isNaN(v)&&!isNaN(i)&&!isNaN(r)) show('ohm-res','V = '+round3(i*r)+' V <span>R×I</span>');
+  else show('ohm-res','Deixe exatamente 1 campo vazio');
+}
+function calcOhm2(){
+  var v=parseFloat(document.getElementById('c-v').value);
+  var i=parseFloat(document.getElementById('c-i').value);
+  var r=parseFloat(document.getElementById('c-r').value);
+  if(!isNaN(v)&&!isNaN(i)&&isNaN(r)) show('c-res','R = '+round3(v/i)+' Ω');
+  else if(!isNaN(v)&&isNaN(i)&&!isNaN(r)) show('c-res','I = '+round3(v/r)+' A');
+  else if(isNaN(v)&&!isNaN(i)&&!isNaN(r)) show('c-res','V = '+round3(i*r)+' V');
+  else show('c-res','Deixe exatamente 1 campo vazio');
+}
+function calcP(){
+  var v=parseFloat(document.getElementById('p-v').value);
+  var i=parseFloat(document.getElementById('p-i').value);
+  var r=parseFloat(document.getElementById('p-r').value);
+  if(!isNaN(v)&&!isNaN(i)) show('p-res','P = '+round3(v*i)+' W (V×I)');
+  else if(!isNaN(i)&&!isNaN(r)) show('p-res','P = '+round3(i*i*r)+' W (I²×R)');
+  else if(!isNaN(v)&&!isNaN(r)) show('p-res','P = '+round3(v*v/r)+' W (V²/R)');
+  else show('p-res','Informe V+I, I+R ou V+R');
+}
+function calcSerie2(){
+  var vals=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+  var rt=0;vals.forEach(function(el){var v=parseFloat(el.value);if(!isNaN(v))rt+=v;});
+  show('s-res','Req = '+round3(rt)+' Ω');
+}
+function calcPar2(){
+  var ids=['pa1','pa2','pa3'];var inv=0;
+  ids.forEach(function(id){var v=parseFloat(document.getElementById(id).value);if(!isNaN(v)&&v>0)inv+=1/v;});
+  show('pa-res','Req = '+(inv>0?round3(1/inv)+' Ω':'—'));
+}
+function calc2aOhm(){
+  var rho=parseFloat(document.getElementById('rho').value);
+  var l=parseFloat(document.getElementById('comp').value);
+  var s=parseFloat(document.getElementById('sec').value);
+  if(!isNaN(rho)&&!isNaN(l)&&!isNaN(s)&&s>0) show('r2-res','R = '+round3(rho*l/s)+' Ω');
+  else show('r2-res','Preencha todos os campos');
+}
+function calcCoulomb(){
+  var q1=parseFloat(document.getElementById('coul-q1').value)*1e-6;
+  var q2=parseFloat(document.getElementById('coul-q2').value)*1e-6;
+  var d=parseFloat(document.getElementById('coul-d').value)/100;
+  if(!isNaN(q1)&&!isNaN(q2)&&!isNaN(d)&&d>0){
+    var F=9e9*Math.abs(q1)*Math.abs(q2)/(d*d);
+    show('coul-res','F = '+round3(F)+' N');
+  } else show('coul-res','Preencha todos os campos');
+}
+function calcJoule(){
+  var i=parseFloat(document.getElementById('j-i').value)||0;
+  var r=parseFloat(document.getElementById('j-r').value)||0;
+  var t=parseFloat(document.getElementById('j-t').value)||1;
+  var p=i*i*r;
+  show('j-res','P = '+round3(p)+' W · Q = '+round3(p*t)+' J em '+t+'s');
+}
+function calcNo(){
+  var i1=parseFloat(document.getElementById('i1').value)||0;
+  var i2=parseFloat(document.getElementById('i2').value)||0;
+  var i3=parseFloat(document.getElementById('i3').value)||0;
+  show('no-res','It = '+round3(i1+i2+i3)+' A');
+}
+
+// ── QUIZ DATA — 40 QUESTIONS ──
+var qs=[
+  // --- BLOCO 1: HISTÓRICO (1-5) ---
+  {tag:"Histórico",t:"Quem descobriu que o <b>âmbar</b>, ao ser atritado, adquire a propriedade de atrair objetos leves — primeiro registro histórico da eletrostática? (apostila pág. 90)",opts:["Benjamin Franklin","Georg Ohm","Tales de Mileto","Otto von Guericke"],ok:2,fb:"Tales de Mileto (séc. VI a.C.) foi o primeiro a observar a propriedade atrativa do âmbar atritado. A palavra 'eletricidade' vem do grego 'elektron', que significa âmbar."},
+  {tag:"Histórico",t:"Alessandro Volta (1800) é responsável pela invenção da <b>pilha elétrica</b>. Como ela foi construída? (apostila pág. 90)",opts:["Empilhou cobre e zinco com flanela embebida em solução salina e ácido","Atritou vidro e lã produzindo carga estática","Empinou uma pipa durante tempestade","Descobriu que corrente produz campo magnético"],ok:0,fb:"Volta empilhou discos de cobre e zinco separados por discos de flanela e cartão embebidos de água salgada e ácido sulfúrico — criando a primeira fonte portátil de energia elétrica."},
+  {tag:"Histórico",t:"George Simon Ohm (1827) demonstrou que em um circuito a corrente é diretamente proporcional à tensão e inversamente proporcional à resistência. Qual a fórmula que representa a <b>1ª Lei de Ohm</b>?",opts:["F = K·Q1·Q2/d²","V = R × I","R = ρ·L/S","P = V × I"],ok:1,fb:"V = R × I é a 1ª Lei de Ohm. George Simon Ohm montou experimentos variando a tensão e medindo a corrente, percebendo que a razão V/I era sempre constante (a resistência)."},
+  {tag:"Histórico",t:"Nikola Tesla e George Westinghouse foram responsáveis pela primeira usina hidrelétrica nas cataratas do Niágara em 1895. Qual tipo de corrente ela gerava? (apostila pág. 91)",opts:["Corrente contínua (CC)","Corrente alternada (CA)","Corrente pulsante","Corrente estática"],ok:1,fb:"A usina do Niágara gerava corrente alternada (CA), que foi a grande vantagem de Tesla/Westinghouse sobre Edison (que defendia a CC). A CA permite transformar tensões facilmente, viabilizando a transmissão a longas distâncias — a usina alcançava mais de 300 km."},
+  {tag:"Histórico",t:"Hans Christian Ørsted (1820) realizou uma descoberta fundamental ao observar que: (apostila pág. 90)",opts:["A corrente elétrica produz campo magnético","O âmbar atritado atrai objetos","A resistência é proporcional ao comprimento","A tensão divide-se nos resistores em série"],ok:0,fb:"Ørsted constatou que uma agulha magnética era defletida quando próxima a um fio condutor com corrente — prova de que corrente elétrica produz campo magnético. Esta descoberta deu início ao estudo do eletromagnetismo."},
+
+  // --- BLOCO 2: ÁTOMO E ELETRIZAÇÃO (6-10) ---
+  {tag:"Átomo",t:"Qual partícula subatômica possui <b>carga negativa</b> e orbita o núcleo em alta velocidade, sendo responsável pela condução elétrica? (apostila pág. 92)",opts:["Próton","Nêutron","Elétron","Fóton"],ok:2,fb:"O elétron (−1,6×10⁻¹⁹ C) orbita o núcleo em regiões chamadas orbitais. Por estar fora do núcleo, é o elemento que se movimenta em condutores, formando a corrente elétrica. Próton tem carga positiva e fica no núcleo; nêutron não tem carga."},
+  {tag:"Átomo",t:"Um átomo que <b>perdeu elétrons</b> torna-se: (apostila pág. 92)",opts:["Ânion (íon negativo)","Cátion (íon positivo)","Elétron livre","Fóton"],ok:1,fb:"Quando um átomo perde elétrons, o número de prótons (positivos) passa a ser maior que o de elétrons — o átomo fica com carga positiva líquida, chamando-se cátion. Se ganhar elétrons, torna-se ânion (negativo)."},
+  {tag:"Eletrização",t:"Na <b>eletrização por atrito</b>, o vidro é atritado com a lã. O que acontece com cada material? (apostila pág. 93)",opts:["Ambos ficam neutros","O vidro fica positivo (perde e⁻) e a lã fica negativa (ganha e⁻)","Ambos ficam negativos","O vidro fica negativo e a lã fica positiva"],ok:1,fb:"Ao atritar vidro com lã, o vidro perde elétrons (fica +) e a lã ganha elétrons (fica –). A intensidade da carga em ambos é igual em módulo mas com sinais opostos. Isso ocorre porque os materiais isolantes têm estrutura que favorece a troca de elétrons no atrito."},
+  {tag:"Eletrização",t:"Na <b>eletrização por contato</b>, o corpo B neutro é tocado pelo corpo A negativamente carregado. O resultado é: (apostila pág. 94)",opts:["B fica positivo, A fica neutro","Ambos ficam negativos","B fica neutro, A se mantém negativo","Ambos ficam positivos"],ok:1,fb:"Na eletrização por contato, o corpo carregado (A) transfere elétrons para o neutro (B). Como A estava negativo (excesso de elétrons), parte deles vai para B. Ao final, ambos ficam com o mesmo tipo de carga (negativos). Se volumes iguais: carga resultante = média aritmética."},
+  {tag:"Eletrização",t:"Na <b>eletrização por indução</b>, o indutor negativo é aproximado do induzido neutro. Após o aterramento e retirada do indutor, o induzido fica com qual carga? (apostila pág. 95)",opts:["Negativa (igual ao indutor)","Neutra","Positiva (oposta ao indutor)","Depende do material"],ok:2,fb:"Na indução, o indutor repele elétrons do induzido para o lado oposto (polarização). O aterramento drena esses elétrons repelidos para a terra. Quando o aterramento é desfeito e o indutor afastado, o induzido fica com falta de elétrons → carga positiva (oposta ao indutor negativo)."},
+
+  // --- BLOCO 3: COULOMB E CAMPO (11-15) ---
+  {tag:"Lei de Coulomb",t:"Pela <b>Lei de Coulomb</b>, o valor da constante eletrostática K no vácuo é: (apostila pág. 97)",opts:["9 × 10⁶ N·m²/C²","9 × 10⁹ N·m²/C²","9 × 10¹² N·m²/C²","9 × 10³ N·m²/C²"],ok:1,fb:"K no vácuo (e no ar seco) = 9 × 10⁹ N·m²/C². Em água, K cai para 0,11 × 10⁹ — o meio influencia significativamente a intensidade da força elétrica. A lei de Coulomb é F = K·|Q1|·|Q2|/d²."},
+  {tag:"Lei de Coulomb",t:"Duas cargas Q1=7,5µC e Q2=9µC estão separadas por 75cm no vácuo. A força de interação entre elas vale aproximadamente: (exemplo da apostila pág. 98)",opts:["0,54 N","1,08 N","5,4 N","0,108 N"],ok:1,fb:"F = K·|Q1|·|Q2|/d² = 9×10⁹ × 7,5×10⁻⁶ × 9×10⁻⁶ / (0,75)² = 0,6075/0,5625 ≈ 1,08 N. Este é o exemplo exato da apostila (pág. 98). Note que d=75cm=0,75m."},
+  {tag:"Campo Elétrico",t:"As <b>linhas de força</b> do campo elétrico ao redor de uma carga positiva são: (apostila pág. 100)",opts:["Convergentes (entram na carga)","Divergentes (saem da carga)","Circulares","Paralelas"],ok:1,fb:"Carga positiva: linhas de força divergentes (saem da carga). Carga negativa: linhas de força convergentes (entram na carga). A densidade das linhas indica a intensidade do campo — maior onde as linhas estão mais próximas."},
+  {tag:"Potencial Elétrico",t:"A <b>diferença de potencial elétrico (DDP)</b> também é chamada de: (apostila pág. 101)",opts:["Resistência elétrica","Tensão elétrica ou FEM","Corrente elétrica","Capacitância"],ok:1,fb:"DDP, tensão elétrica e FEM (força eletromotriz) são sinônimos. DDP e FEM são mais comuns no meio acadêmico; tensão elétrica é o termo mais utilizado no ambiente profissional. A tensão é medida em Volts pelo voltímetro."},
+  {tag:"Potencial Elétrico",t:"Na pilha, o polo <b>positivo</b> tem falta de elétrons e o polo <b>negativo</b> tem excesso. Ao ligar ao circuito, em qual sentido os elétrons se movem? (apostila pág. 101)",opts:["Do polo + para o polo –","Do polo – para o polo +","Os elétrons não se movem","Do polo – para o terra"],ok:1,fb:"Os elétrons se movem do polo negativo (excesso) para o polo positivo (falta). O sentido convencional da corrente é o inverso: do + para o – (definido historicamente por Franklin, antes de saber que são os elétrons que se movem)."},
+
+  // --- BLOCO 4: GERAÇÃO E DISTRIBUIÇÃO (16-20) ---
+  {tag:"Geração",t:"A geração de energia elétrica por <b>ação química</b> baseia-se em: (apostila pág. 102)",opts:["Cristais piezoelétricos submetidos à pressão","Bobina girando em campo magnético","Reação química entre dois metais em solução (pilha)","Efeito fotoelétrico em células de silício"],ok:2,fb:"A geração química usa a reação em pilhas/baterias: dois metais em solução, um com excesso de elétrons (polo –) e outro com falta (polo +). O fluxo de elétrons entre eles constitui a corrente. Exemplo: zinco e cobre em ácido sulfúrico."},
+  {tag:"Geração",t:"O princípio da geração de energia por <b>ação magnética</b> foi descoberto por: (apostila pág. 104)",opts:["Ohm","Michael Faraday","Kirchhoff","Coulomb"],ok:1,fb:"Michael Faraday descobriu que uma bobina que atravessa um campo magnético produz tensão elétrica. Este princípio é aplicado nos geradores de usinas hidrelétricas, termoelétricas e eólicas — é o mais importante para geração em larga escala."},
+  {tag:"Geração",t:"As <b>usinas hidrelétricas</b> foram responsáveis por mais de qual percentual da produção de energia elétrica no Brasil em 2016, segundo a ANEEL? (apostila pág. 107)",opts:["27%","40%","60%","80%"],ok:2,fb:"As usinas hidrelétricas foram responsáveis por mais de 60% da produção em 2016 (ANEEL). As termoelétricas ficaram com mais de 27% e as eólicas com mais de 6%. O Brasil tem grande potencial hídrico e depende fortemente das hidrelétricas."},
+  {tag:"Geração",t:"A <b>geração eólica</b> usa aerogeradores que convertem energia dos ventos em elétrica. Uma desvantagem dos parques eólicos é: (apostila pág. 109)",opts:["Poluição por CO₂","Produzem apenas CC","Geram energia ~30% do tempo em que estão ligados","São mais caros que usinas nucleares"],ok:2,fb:"Em função das variações nas rajadas de vento, os aerogeradores conseguem produzir energia elétrica em cerca de apenas 30% do tempo em que passam ligados — eficiência limitada pela intermitência do vento. São energia renovável e não poluente, mas de custo relativamente alto."},
+  {tag:"Distribuição",t:"No sistema de distribuição elétrica, o <b>transformador</b> na saída da usina serve para: (apostila pág. 111)",opts:["Converter CA em CC","Elevar a tensão para facilitar o transporte a longas distâncias","Reduzir a corrente para uso residencial","Acumular a energia gerada"],ok:1,fb:"O transformador eleva a tensão na saída da usina para facilitar o transporte da energia elétrica pelos cabos com menor perda (menor corrente = menor efeito Joule nos cabos). Nas subestações distribuidoras, outros transformadores rebaixam a tensão para o consumidor final (380/220 V ou 220/127 V)."},
+
+  // --- BLOCO 5: GRANDEZAS E INSTRUMENTOS (21-25) ---
+  {tag:"Grandezas",t:"A <b>corrente elétrica</b> é medida em Ampères. 1 Ampère equivale a: (apostila pág. 112)",opts:["1 Volt por Ohm (apenas)","1 Coulomb por segundo passando por um condutor","6,25×10¹⁸ elétrons parados","1 Watt por Volt (apenas)"],ok:1,fb:"1 A = 1 C/s. 1 Coulomb = 6,25×10¹⁸ cargas elementares. A corrente mede o fluxo de cargas por unidade de tempo: I = Q/t. As duas respostas sobre V/Ohm e W/V também são válidas (pelas leis de Ohm e Joule), mas a definição fundamental é 1 C/s."},
+  {tag:"Grandezas",t:"A <b>corrente alternada (CA)</b>, em seu comportamento normal, segue qual função trigonométrica? (apostila pág. 114)",opts:["Cosseno","Tangente","Seno","Logarítmica"],ok:2,fb:"A corrente alternada segue a função trigonométrica seno. Um ciclo completo vai do zero ao máximo positivo, retorna ao zero, vai ao máximo negativo e volta ao zero. No Brasil, a CA tem frequência de 60 Hz (60 ciclos por segundo)."},
+  {tag:"Grandezas",t:"Qual instrumento é utilizado para medir a <b>resistência elétrica</b>? (apostila pág. 116)",opts:["Voltímetro","Wattímetro","Amperímetro","Ohmímetro"],ok:3,fb:"O ohmímetro mede resistência elétrica em Ohms (Ω). O multímetro reúne em um aparelho: voltímetro, amperímetro, ohmímetro, entre outros. Na escala do multímetro, o símbolo (~) indica CA e o traço (–) indica CC."},
+  {tag:"Instrumentos",t:"Ao usar o multímetro para medir tensão, a escala selecionada deve ser: (apostila pág. 115 — caso Isadora)",opts:["Menor que o valor esperado","Igual ao valor esperado","Maior que o valor esperado","Qualquer escala serve"],ok:2,fb:"Sempre escolha uma escala maior que o valor a ser medido. Tentar medir um valor maior que a escala selecionada pode danificar o aparelho. No caso da apostila, Isadora mediu tensão de 380 V selecionando a escala de 750 V."},
+  {tag:"Instrumentos",t:"O símbolo (<b>~</b>) abaixo da unidade nos instrumentos elétricos indica: (apostila pág. 112–115)",opts:["Tensão ou corrente contínua","Tensão ou corrente alternada","Resistência de isolamento","Frequência em Hz"],ok:1,fb:"O til (~) indica CA (Corrente Alternada). O traço (–) indica CC (Corrente Contínua). Esta informação é importante: amperímetro ou voltímetro para CA não pode medir CC com precisão e vice-versa. O multímetro geralmente tem funções separadas para cada tipo."},
+
+  // --- BLOCO 6: MATERIAIS E RESISTORES (26-30) ---
+  {tag:"Materiais",t:"Por que os modernos <b>bastões de manobra</b> são feitos de fibra de vidro em vez de madeira? (apostila pág. 118)",opts:["A madeira é mais cara","A madeira absorve umidade e perde a isolação elétrica","A fibra de vidro é mais flexível","A madeira conduz melhor em temperaturas altas"],ok:1,fb:"A madeira absorve umidade facilmente, o que compromete sua propriedade isolante e coloca em risco o profissional que usa o equipamento. A fibra de vidro não absorve umidade, mantendo a isolação mesmo em ambientes úmidos."},
+  {tag:"Resistores",t:"Um resistor com as faixas <b>Amarelo–Violeta–Vermelho–Dourado</b> tem valor de: (apostila pág. 124)",opts:["470 Ω ±5%","4.700 Ω ±5%","47.000 Ω ±5%","470 kΩ ±5%"],ok:1,fb:"Amarelo=4, Violeta=7, Vermelho=×100 (multiplicador), Dourado=±5% (tolerância). Logo: 47 × 100 = 4.700 Ω ±5%. O valor real pode estar entre 4.465 Ω e 4.935 Ω. Este é o exemplo exato da apostila (pág. 124)."},
+  {tag:"Resistores",t:"O <b>trimpot</b> (resistor ajustável) se diferencia do potenciômetro porque: (apostila pág. 125–126)",opts:["O trimpot é sempre de maior resistência","O trimpot é ajustado internamente com chave; o potenciômetro tem botão externo acessível","O potenciômetro tem maior precisão","O trimpot só funciona em CA"],ok:1,fb:"O trimpot é ajustado internamente (com chave Philips), não sendo acessível ao usuário final — usado para calibração durante manutenção. O potenciômetro tem botão giratório acessível ao usuário, aplicado em controle de velocidade de motores e regulagem de tensão em fontes."},
+  {tag:"Resistores",t:"Quanto maior o <b>tamanho físico</b> de um resistor eletrônico, maior é: (apostila pág. 124–125)",opts:["Sua tolerância","Sua potência de dissipação (watts)","Sua resistência (ohms)","Seu código de cores"],ok:1,fb:"Resistores maiores têm maior área de superfície, o que permite dissipar mais calor para o ambiente. Resistores de 0,25W são pequenos; de 2W são maiores. A resistência (Ω) é dada pelo código de cores, independente do tamanho."},
+  {tag:"Circuitos",t:"Em um circuito em <b>série</b>, se um dos resistores for removido: (apostila pág. 128–129)",opts:["Os outros resistores continuam funcionando normalmente","O circuito inteiro para — não há corrente","A corrente aumenta nos resistores restantes","A tensão da fonte é redistribuída"],ok:1,fb:"No circuito em série há apenas um caminho para a corrente. Se qualquer elemento for removido, esse caminho é interrompido e o circuito abre — não circula corrente. Diferentemente do paralelo, onde os ramos são independentes entre si."},
+
+  // --- BLOCO 7: CIRCUITOS SÉRIE E PARALELO (31-35) ---
+  {tag:"Série",t:"Três resistores de <b>7Ω, 10Ω e 8Ω</b> em série. Qual a resistência equivalente? (exemplo da apostila pág. 129)",opts:["3,3 Ω","8,3 Ω","25 Ω","560 Ω"],ok:2,fb:"Req = R1+R2+R3 = 7+10+8 = 25 Ω. Este é o exemplo exato da apostila (fig. 66–67). Com fonte de 12V: I = 12/25 = 0,48 A (mesma corrente em todos os pontos do circuito em série)."},
+  {tag:"Paralelo",t:"Dois resistores de <b>10Ω cada</b> estão em paralelo. Qual a resistência equivalente? (apostila pág. 135)",opts:["20 Ω","10 Ω","5 Ω","2 Ω"],ok:2,fb:"Método para resistores iguais: Req = R/n = 10/2 = 5 Ω. Também pode ser calculado pelo método prático: Req = 10×10/(10+10) = 100/20 = 5 Ω. Em paralelo, a Req sempre é menor que a menor resistência individual."},
+  {tag:"Paralelo",t:"R1=60Ω, R2=80Ω e R3=100Ω em <b>paralelo</b>. Qual a resistência equivalente? (exemplo da apostila pág. 136–137)",opts:["240 Ω","80 Ω","40 Ω","25,53 Ω"],ok:3,fb:"Usando o método prático duas vezes: RA = 60×80/(60+80) = 34,29 Ω. Req = 34,29×100/(34,29+100) ≈ 25,53 Ω. Este é o exemplo da apostila (fig. 72–74). Em paralelo com valores diferentes, usar método prático ou a fórmula geral."},
+  {tag:"Circuito Misto",t:"No circuito misto da apostila (pág. 140–142): R1=8Ω e R2=7Ω em série, depois em paralelo com R3=15Ω. Qual o Req? (apostila pág. 142)",opts:["30 Ω","22,5 Ω","7,5 Ω","15 Ω"],ok:2,fb:"R1+R2 = 8+7 = 15 Ω (=RA). RA em paralelo com R3=15Ω (resistores iguais): Req = 15/2 = 7,5 Ω. Este é o exemplo direto da apostila — como RA=R3, usa-se o método para resistores iguais."},
+  {tag:"1ª Lei de Ohm",t:"Circuito com Req=36,75Ω alimentado por V=48V. Qual a corrente total? (exemplo da apostila pág. 149)",opts:["0,48 A","1,31 A","3,1 A","17,64 A"],ok:1,fb:"I = V/R = 48/36,75 ≈ 1,31 A. Este é o exato exemplo da apostila (pág. 149) com 5 resistores: R1=12Ω, R2=14Ω, R3=16Ω, R4=50Ω, R5=6Ω. A apostila resolve o circuito passo a passo chegando em Req=36,75Ω."},
+
+  // --- BLOCO 8: LEIS DE OHM E KIRCHHOFF (36-40) ---
+  {tag:"2ª Lei de Ohm",t:"Um fio de cobre (ρ=0,0173 Ω·mm²/m), com seção de 1,5mm² e comprimento de 50m, tem resistência de: (apostila pág. 153)",opts:["0,58 Ω","5,8 Ω","0,058 Ω","58 Ω"],ok:0,fb:"R = ρ×L/S = 0,0173×50/1,5 = 0,865/1,5 ≈ 0,58 Ω. Este é o exemplo literal da apostila. Se conduzir 7,5 A: queda de tensão = 0,58×7,5 = 4,35 V. Isso mostra por que cabos longos causam perda de tensão."},
+  {tag:"2ª Lei de Ohm",t:"Pela 2ª Lei de Ohm (R=ρ·L/S), para <b>reduzir</b> a resistência de um condutor sem mudar o material: (apostila pág. 151–153)",opts:["Aumentar o comprimento","Reduzir a seção transversal","Aumentar a seção transversal","Diminuir a temperatura"],ok:2,fb:"Aumentar a seção transversal (S maior) reduz a resistência (R = ρ×L/S: S no denominador). No caso da apostila (pág. 154), a equipe resolveu o problema de queda de tensão numa linha de 500m aumentando a seção do condutor de alumínio, pois mudar o material elevaria muito o custo."},
+  {tag:"Kirchhoff LKC",t:"Num nó de circuito, chegam correntes Ia=0,48A e Ib=0,96A. A corrente total (It) que sai vale: (exemplo da apostila pág. 155–156)",opts:["0,48 A","0,96 A","1,44 A","1,92 A"],ok:2,fb:"LKC (1ª Lei de Kirchhoff): ΣI_entrada = ΣI_saída → It = Ia+Ib = 0,48+0,96 = 1,44 A. Este é o exemplo exato da apostila (fig. 85). Note: Ib é o dobro de Ia porque R2=5Ω (metade de R4=10Ω) — maior corrente no menor resistor."},
+  {tag:"Kirchhoff LKT",t:"Em um circuito série com fonte de 12V, R1=2kΩ, R2=5kΩ e R3=3kΩ. A queda de tensão em R2 é: (exemplo da apostila pág. 156–157)",opts:["2,4 V","3,6 V","6,0 V","12 V"],ok:2,fb:"I = 12V/(2k+5k+3k) = 12/10k = 1,2mA. VR2 = R2×I = 5000×0,0012 = 6,0 V. LKT confirma: 2,4+6,0+3,6=12V. Este é o exemplo exato da apostila (fig. 86): VR1=2,4V, VR2=6V, VR3=3,6V."},
+  {tag:"Leis de Kirchhoff",t:"Pela aplicação das leis de Kirchhoff em circuito em <b>paralelo</b>: (apostila pág. 157)",opts:["A corrente é igual em todos os ramos","A tensão divide-se proporcionalmente à resistência","A tensão é igual em todos os ramos e a corrente se divide inversamente à resistência","A soma das resistências é a resistência equivalente"],ok:2,fb:"Em paralelo (LKT): todos os ramos estão submetidos à mesma tensão (mesma DDP). Em paralelo (LKC): a corrente se divide entre os ramos, passando maior parcela pelo ramo de menor resistência. É o comportamento oposto ao circuito em série, onde a corrente é igual e a tensão se divide."}
+];
+
+var cur=0,scr=0;
+function initDots(){
+  var d=document.getElementById('dots');d.innerHTML='';
+  for(var i=0;i<qs.length;i++){
+    var el=document.createElement('div');
+    el.className='dot'+(i===0?' cur':'');
+    el.id='dot'+i;d.appendChild(el);
+  }
+}
+function updateDot(i,state){
+  var el=document.getElementById('dot'+i);
+  if(el) el.className='dot '+(state==='ok'?'ok':'ng');
+}
+function renderQ(){
+  if(cur>=qs.length){showRes();return;}
+  var q=qs[cur];var L=['A','B','C','D'];
+  var h='<div class="qcard"><div class="q-meta"><span class="q-num">Questão '+(cur+1)+' / '+qs.length+'</span><span class="q-tag">'+q.tag+'</span></div>';
+  h+='<div class="q-text">'+q.t+'</div><div class="opts">';
+  for(var i=0;i<q.opts.length;i++)
+    h+='<button class="opt" id="o'+i+'" onclick="pick('+i+')" aria-label="Opção '+L[i]+'"><span class="opt-let">'+L[i]+'</span><span>'+q.opts[i]+'</span></button>';
+  h+='</div><div class="fb" id="fb"></div></div>';
+  document.getElementById('qbody').innerHTML=h;
+  document.getElementById('qctr').textContent='Questão '+(cur+1)+' de '+qs.length;
+  document.getElementById('prog').style.width=(cur/qs.length*100)+'%';
+  if(cur>0){var d2=document.getElementById('dot'+cur);if(d2)d2.className='dot cur';}
+}
+function pick(i){
+  var q=qs[cur];
+  document.querySelectorAll('.opt').forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb');
+  if(i===q.ok){
+    document.getElementById('o'+i).className='opt correct';
+    scr++;fb.className='fb correct';fb.innerHTML='&#10003; <b>Correto!</b> '+q.fb;
+    updateDot(cur,'ok');
+  } else {
+    document.getElementById('o'+i).className='opt wrong';
+    document.getElementById('o'+q.ok).className='opt correct';
+    fb.className='fb wrong';fb.innerHTML='&#10007; <b>Correta: '+['A','B','C','D'][q.ok]+'.</b> '+q.fb;
+    updateDot(cur,'ng');
+  }
+  fb.style.display='block';
+  document.getElementById('sval').textContent=scr;
+  document.getElementById('global-score').textContent=scr;
+  setTimeout(function(){cur++;renderQ();},3000);
+}
+function showRes(){
+  document.getElementById('qbody').innerHTML='';
+  document.getElementById('qhint').style.display='none';
+  document.getElementById('resultbox').style.display='block';
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('qctr').textContent='Quiz concluído!';
+  var pct=Math.round(scr/qs.length*100);
+  document.getElementById('rscore').textContent=scr+'/'+qs.length+' ('+pct+'%)';
+  var msgs=[
+    '⚡ Continue estudando — revise os módulos de fundamentos da apostila.',
+    '📖 Bom início! Releia especialmente os capítulos 6 e 7.',
+    '🔧 Resultado razoável — pratique com as calculadoras e revise circuitos.',
+    '⭐ Muito bem! Domínio sólido dos fundamentos da Eletricidade Vol. I.',
+    '🏆 Excelente! Domínio completo do conteúdo da apostila. Parabéns!'
+  ];
+  document.getElementById('rmsg').textContent=msgs[pct<40?0:pct<55?1:pct<70?2:pct<90?3:4];
+}
+function restartQuiz(){
+  cur=0;scr=0;
+  document.getElementById('resultbox').style.display='none';
+  document.getElementById('qhint').style.display='block';
+  document.getElementById('sval').textContent='0';
+  document.getElementById('global-score').textContent='0';
+  initDots();renderQ();
+}
+initDots();renderQ();
+</script>
+</body>
+</html>
